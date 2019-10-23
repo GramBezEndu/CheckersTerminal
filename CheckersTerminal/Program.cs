@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CheckersLogic;
+using System;
 
 namespace CheckersTerminal
 {
@@ -7,6 +8,7 @@ namespace CheckersTerminal
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
+            Pawn t = new BlackDame();
         }
     }
 }
