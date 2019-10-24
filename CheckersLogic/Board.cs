@@ -10,7 +10,10 @@ namespace CheckersLogic
         /// Starting from top left corner
         /// </summary>
         public Square[][] squares = new Square[8][];
-        public List<Pawn> pawns = new List<Pawn>();
+        //public List<Pawn> pawns = new List<Pawn>();
+
+        public Square currentlySelectedSquare;
+
         public bool blackPawnsAtBeginningOnBottom = true;
         public Board()
         {
@@ -23,37 +26,26 @@ namespace CheckersLogic
         {
             if(blackPawnsAtBeginningOnBottom)
             {
-                var whitePawns = new List<WhiteMan>()
-                {
-                    new WhiteMan(),
-                    new WhiteMan(),
-                    new WhiteMan(),
-                    new WhiteMan(),
-                    new WhiteMan(),
-                    new WhiteMan(),
-                    new WhiteMan(),
-                    new WhiteMan(),
-                    new WhiteMan(),
-                    new WhiteMan(),
-                    new WhiteMan(),
-                    new WhiteMan(),
-                };
-                whitePawns[0].position = squares[0][0];
-                whitePawns[1].position = squares[0][2];
-                whitePawns[2].position = squares[0][4];
-                whitePawns[3].position = squares[0][6];
+                var whitePawns = new List<WhiteMan>();
+                for (int i = 0; i < 12; i++)
+                    whitePawns.Add(new WhiteMan(squares));
 
-                whitePawns[4].position = squares[1][1];
-                whitePawns[5].position = squares[1][3];
-                whitePawns[6].position = squares[1][5];
-                whitePawns[7].position = squares[1][7];
+                (squares[0][0] as BrownSquare).Pawn = whitePawns[0];
+                (squares[0][2] as BrownSquare).Pawn = whitePawns[1];
+                (squares[0][4] as BrownSquare).Pawn = whitePawns[2];
+                (squares[0][6] as BrownSquare).Pawn = whitePawns[3];
 
-                whitePawns[8].position = squares[2][0];
-                whitePawns[9].position = squares[2][2];
-                whitePawns[10].position = squares[2][4];
-                whitePawns[11].position = squares[2][6];
+                (squares[1][1] as BrownSquare).Pawn = whitePawns[4];
+                (squares[1][3] as BrownSquare).Pawn = whitePawns[5];
+                (squares[1][5] as BrownSquare).Pawn = whitePawns[6];
+                (squares[1][7] as BrownSquare).Pawn = whitePawns[7];
 
-                pawns.AddRange(whitePawns);
+                (squares[2][0] as BrownSquare).Pawn = whitePawns[8];
+                (squares[2][2] as BrownSquare).Pawn = whitePawns[9];
+                (squares[2][4] as BrownSquare).Pawn = whitePawns[10];
+                (squares[2][6] as BrownSquare).Pawn = whitePawns[11];
+
+                //pawns.AddRange(whitePawns);
             }
             else
             {
@@ -61,41 +53,51 @@ namespace CheckersLogic
             }
         }
 
+        /// <summary>
+        /// Returns if move was valid
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
+        public bool MovePawn(Square start, Square end)
+        {
+            //Brown square can not contain pawns
+            if(!(start is BrownSquare))
+            {
+                return false;
+            }
+            BrownSquare s = (start as BrownSquare);
+            //No pawn in start square
+            if (s.Pawn == null)
+                return false;
+            return s.Pawn.Move(end);
+            //s.pawn.Move()
+        }
+
         private void AddBlackPawns()
         {
             if(blackPawnsAtBeginningOnBottom)
             {
-                var blackPawns = new List<BlackMan>()
-                {
-                    new BlackMan(),
-                    new BlackMan(),
-                    new BlackMan(),
-                    new BlackMan(),
-                    new BlackMan(),
-                    new BlackMan(),
-                    new BlackMan(),
-                    new BlackMan(),
-                    new BlackMan(),
-                    new BlackMan(),
-                    new BlackMan(),
-                    new BlackMan(),
-                };
-                blackPawns[0].position = squares[7][1];
-                blackPawns[1].position = squares[7][3];
-                blackPawns[2].position = squares[7][5];
-                blackPawns[3].position = squares[7][7];
+                var blackPawns = new List<BlackMan>();
+                for (int i = 0; i < 12; i++)
+                    blackPawns.Add(new BlackMan(squares));
 
-                blackPawns[4].position = squares[6][0];
-                blackPawns[5].position = squares[6][2];
-                blackPawns[6].position = squares[6][4];
-                blackPawns[7].position = squares[6][6];
+                (squares[7][1] as BrownSquare).Pawn = blackPawns[0];
+                (squares[7][3] as BrownSquare).Pawn = blackPawns[1];
+                (squares[7][5] as BrownSquare).Pawn = blackPawns[2];
+                (squares[7][7] as BrownSquare).Pawn = blackPawns[3];
 
-                blackPawns[8].position = squares[5][1];
-                blackPawns[9].position = squares[5][3];
-                blackPawns[10].position = squares[5][5];
-                blackPawns[11].position = squares[5][7];
+                (squares[6][0] as BrownSquare).Pawn = blackPawns[4];
+                (squares[6][2] as BrownSquare).Pawn = blackPawns[5];
+                (squares[6][4] as BrownSquare).Pawn = blackPawns[6];
+                (squares[6][6] as BrownSquare).Pawn = blackPawns[7];
 
-                pawns.AddRange(blackPawns);
+                (squares[5][1] as BrownSquare).Pawn = blackPawns[8];
+                (squares[5][3] as BrownSquare).Pawn = blackPawns[9];
+                (squares[5][5] as BrownSquare).Pawn = blackPawns[10];
+                (squares[5][7] as BrownSquare).Pawn = blackPawns[11];
+
+                //pawns.AddRange(blackPawns);
             }
             else
             {

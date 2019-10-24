@@ -6,9 +6,18 @@ namespace CheckersLogic
 {
     public class BlackMan : ManPawn
     {
+        public BlackMan(Square[][] sq) : base(sq)
+        {
+        }
+
         public override bool Move(Square end)
         {
-            throw new NotImplementedException();
+            if (base.Move(end) == false)
+                return false;
+            else
+            {
+                return true;
+            }
         }
     }
 }

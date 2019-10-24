@@ -6,5 +6,8 @@ namespace CheckersLogic
 {
     public abstract class Dame : Pawn
     {
+        public Dame(Square[][] sq) : base(sq)
+        {
+        }
     }
 }
