@@ -18,12 +18,11 @@ namespace CheckersLogic
         {
             squares = sq;
         }
-        public virtual bool Move(Square end)
+        public virtual bool CanMove(BrownSquare end)
         {
-            if (!(end is BrownSquare))
+            if (end == position)
                 return false;
-            else
-                return true;
+            return true;
         }
     }
 }

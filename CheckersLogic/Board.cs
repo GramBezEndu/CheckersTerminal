@@ -12,7 +12,11 @@ namespace CheckersLogic
         public Square[][] squares = new Square[8][];
         //public List<Pawn> pawns = new List<Pawn>();
 
-        public Square currentlySelectedSquare;
+        public BrownSquare currentlySelectedSquare;
+        /// <summary>
+        /// Indicates which (black or white) turn it is now
+        /// </summary>
+        public bool blackTurn = true;
 
         public bool blackPawnsAtBeginningOnBottom = true;
         public Board()
@@ -59,19 +63,42 @@ namespace CheckersLogic
         /// <param name="start"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public bool MovePawn(Square start, Square end)
+        private bool CanMovePawn(BrownSquare start, BrownSquare end)
         {
-            //Brown square can not contain pawns
-            if(!(start is BrownSquare))
-            {
-                return false;
-            }
-            BrownSquare s = (start as BrownSquare);
             //No pawn in start square
-            if (s.Pawn == null)
+            if (start.Pawn == null)
                 return false;
-            return s.Pawn.Move(end);
-            //s.pawn.Move()
+            if(blackTurn)
+            {
+                if (start.Pawn is WhiteDame || start.Pawn is WhiteMan)
+                    return false;
+            }
+            else
+            {
+                if (start.Pawn is BlackDame || start.Pawn is BlackMan)
+                    return false;
+            }
+            return start.Pawn.CanMove(end);
+        }
+
+        public void MovePawn(BrownSquare start, BrownSquare end)
+        {
+            //Always reset currentlySelectedSquare!
+            currentlySelectedSquare = null;
+
+            //Could not move pawn
+            if (!CanMovePawn(start, end))
+            {
+                return;
+            }
+            else
+            {
+                Pawn pawn = start.Pawn;
+                start.Pawn = null;
+                end.Pawn = pawn;
+                //Switch after correct move (no double [and more] take implemented yet)
+                blackTurn = !blackTurn;
+            }
         }
 
         private void AddBlackPawns()

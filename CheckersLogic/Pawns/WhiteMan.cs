@@ -10,9 +10,14 @@ namespace CheckersLogic
         {
         }
 
-        public override bool Move(Square end)
+        public override bool CanMove(BrownSquare end)
         {
-            throw new NotImplementedException();
+            if (base.CanMove(end) == false)
+                return false;
+            else
+            {
+                return true;
+            }
         }
     }
 }
