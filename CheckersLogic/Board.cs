@@ -13,11 +13,12 @@ namespace CheckersLogic
         //public List<Pawn> pawns = new List<Pawn>();
 
         private BrownSquare selectedSquareAsStart;
+        public List<BrownSquare> selectedSquaresToEnd { get; private set; } = new List<BrownSquare>();
         /// <summary>
         /// Indicates which (black or white) turn it is now
         /// </summary>
         public bool IsBlackTurn = true;
-        public string Message
+        public string TurnMessage
         {
             get
             {
@@ -46,6 +47,8 @@ namespace CheckersLogic
         private const string blackTurnText = "BLACK TURN";
         private const string whiteTurnText = "WHITE TURN";
 
+        private const string notValidMoveText = "NOT VALID MOVE";
+
         public bool blackPawnsAtBeginningOnBottom = true;
         public Board()
         {
@@ -57,6 +60,29 @@ namespace CheckersLogic
         public void ResetMove()
         {
             SetSelectedSquareAsStart(null);
+            selectedSquaresToEnd = new List<BrownSquare>();
+        }
+
+        public void AcceptMove()
+        {
+            if(GetSelectedSquareAsStart() != null && selectedSquaresToEnd.Count > 0)
+            {
+                //First case: accepting only one move
+                if(selectedSquaresToEnd.Count == 1)
+                {
+                    MovePawn(GetSelectedSquareAsStart(), selectedSquaresToEnd[0]);
+                }
+                //More than 1 move in one turn -> every move HAS TO be a takedown
+                else
+                {
+                    throw new NotImplementedException();
+                    //Create another method Pawn.MoveIsTakeDown and iterate
+                    //+ change every move start and end square
+                }
+            }
+            //Reset selected squares no matter the result
+            SetSelectedSquareAsStart(null);
+            selectedSquaresToEnd = new List<BrownSquare>();
         }
 
         private void AddWhitePawns()
@@ -111,6 +137,8 @@ namespace CheckersLogic
                 if (start.Pawn is BlackDame || start.Pawn is BlackMan)
                     return false;
             }
+            if (start.Pawn.position == end)
+                return false;
             return start.Pawn.CanMove(end);
         }
 
@@ -119,14 +147,13 @@ namespace CheckersLogic
             if (GetSelectedSquareAsStart() == null)
                 SetSelectedSquareAsStart(square);
             else
-                MovePawn(GetSelectedSquareAsStart(), square);
+            {
+                selectedSquaresToEnd.Add(square);
+            }
         }
 
         private void MovePawn(BrownSquare start, BrownSquare end)
         {
-            //Always reset currentlySelectedSquare!
-            selectedSquareAsStart = null;
-
             //Could not move pawn
             if (!CanMovePawn(start, end))
             {
@@ -139,6 +166,7 @@ namespace CheckersLogic
                 end.Pawn = pawn;
                 //Switch after correct move (no double [and more] take implemented yet)
                 IsBlackTurn = !IsBlackTurn;
+                return;
             }
         }
 
