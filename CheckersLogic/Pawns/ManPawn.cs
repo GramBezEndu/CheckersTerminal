@@ -13,6 +13,7 @@ namespace CheckersLogic
         public override bool CanMove(BrownSquare end)
         {
             return base.CanMove(end);
+            //if(end.xIndex )
         }
     }
 }

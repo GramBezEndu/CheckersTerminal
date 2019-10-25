@@ -12,11 +12,37 @@ namespace CheckersLogic
         public Square[][] squares = new Square[8][];
         //public List<Pawn> pawns = new List<Pawn>();
 
-        public BrownSquare currentlySelectedSquare;
+        private BrownSquare selectedSquareAsStart;
         /// <summary>
         /// Indicates which (black or white) turn it is now
         /// </summary>
-        public bool blackTurn = true;
+        public bool IsBlackTurn = true;
+        public string Message
+        {
+            get
+            {
+                if (IsBlackTurn)
+                    return blackTurnText;
+                else
+                    return whiteTurnText;
+            }
+        }
+
+        public BrownSquare GetSelectedSquareAsStart()
+        {
+            return selectedSquareAsStart;
+        }
+
+        public void SetSelectedSquareAsStart(BrownSquare value)
+        {
+            if (IsBlackTurn && (value.Pawn is BlackDame || value.Pawn is BlackMan))
+                selectedSquareAsStart = value;
+            else if (IsBlackTurn == false && (value.Pawn is WhiteDame || value.Pawn is WhiteMan))
+                selectedSquareAsStart = value;
+        }
+
+        private const string blackTurnText = "BLACK TURN";
+        private const string whiteTurnText = "WHITE TURN";
 
         public bool blackPawnsAtBeginningOnBottom = true;
         public Board()
@@ -68,7 +94,7 @@ namespace CheckersLogic
             //No pawn in start square
             if (start.Pawn == null)
                 return false;
-            if(blackTurn)
+            if(IsBlackTurn)
             {
                 if (start.Pawn is WhiteDame || start.Pawn is WhiteMan)
                     return false;
@@ -81,10 +107,18 @@ namespace CheckersLogic
             return start.Pawn.CanMove(end);
         }
 
-        public void MovePawn(BrownSquare start, BrownSquare end)
+        public void OnInteraction(BrownSquare square)
+        {
+            if (GetSelectedSquareAsStart() == null)
+                SetSelectedSquareAsStart(square);
+            else
+                MovePawn(GetSelectedSquareAsStart(), square);
+        }
+
+        private void MovePawn(BrownSquare start, BrownSquare end)
         {
             //Always reset currentlySelectedSquare!
-            currentlySelectedSquare = null;
+            selectedSquareAsStart = null;
 
             //Could not move pawn
             if (!CanMovePawn(start, end))
@@ -97,7 +131,7 @@ namespace CheckersLogic
                 start.Pawn = null;
                 end.Pawn = pawn;
                 //Switch after correct move (no double [and more] take implemented yet)
-                blackTurn = !blackTurn;
+                IsBlackTurn = !IsBlackTurn;
             }
         }
 
