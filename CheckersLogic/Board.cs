@@ -35,7 +35,9 @@ namespace CheckersLogic
 
         public void SetSelectedSquareAsStart(BrownSquare value)
         {
-            if (IsBlackTurn && (value.Pawn is BlackDame || value.Pawn is BlackMan))
+            if (value == null)
+                selectedSquareAsStart = null;
+            else if (IsBlackTurn && (value.Pawn is BlackDame || value.Pawn is BlackMan))
                 selectedSquareAsStart = value;
             else if (IsBlackTurn == false && (value.Pawn is WhiteDame || value.Pawn is WhiteMan))
                 selectedSquareAsStart = value;
@@ -50,6 +52,11 @@ namespace CheckersLogic
             CreateSquares();
             AddBlackPawns();
             AddWhitePawns();
+        }
+
+        public void ResetMove()
+        {
+            SetSelectedSquareAsStart(null);
         }
 
         private void AddWhitePawns()
