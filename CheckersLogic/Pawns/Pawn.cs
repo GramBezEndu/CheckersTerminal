@@ -18,6 +18,16 @@ namespace CheckersLogic
         {
             squares = sq;
         }
-        public abstract bool CanMove(BrownSquare end);
+        public bool CanMove(BrownSquare end)
+        {
+            if (IsRegularMove(end))
+                return true;
+            else if (IsTakedownMove(end))
+                return true;
+            else
+                return false;
+        }
+        protected abstract bool IsRegularMove(BrownSquare end);
+        public abstract bool IsTakedownMove(BrownSquare end);
     }
 }

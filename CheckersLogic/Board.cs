@@ -75,7 +75,12 @@ namespace CheckersLogic
                 //More than 1 move in one turn -> every move HAS TO be a takedown
                 else
                 {
-                    throw new NotImplementedException();
+                    //keep the reference
+                    BrownSquare firstSquare = GetSelectedSquareAsStart();
+                    for(int i = 0;i<selectedSquaresToEnd.Count;i++)
+                    {
+                        //if(s)
+                    }
                     //Create another method Pawn.MoveIsTakeDown and iterate
                     //+ change every move start and end square
                 }
@@ -152,6 +157,11 @@ namespace CheckersLogic
             }
         }
 
+        /// <summary>
+        /// Can be regular or takedown move
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
         private void MovePawn(BrownSquare start, BrownSquare end)
         {
             //Could not move pawn

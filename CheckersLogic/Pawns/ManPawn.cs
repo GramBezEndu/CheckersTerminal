@@ -9,11 +9,5 @@ namespace CheckersLogic
         public ManPawn(Square[][] sq) : base(sq)
         {
         }
-
-        public override bool CanMove(BrownSquare end)
-        {
-            return true;
-            //if(end.xIndex )
-        }
     }
 }

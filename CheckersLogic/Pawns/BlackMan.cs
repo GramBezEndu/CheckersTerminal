@@ -10,14 +10,14 @@ namespace CheckersLogic
         {
         }
 
-        public override bool CanMove(BrownSquare end)
+        public override bool IsTakedownMove(BrownSquare end)
         {
-            if (base.CanMove(end) == false)
-                return false;
-            else
-            {
-                return true;
-            }
+            throw new NotImplementedException();
+        }
+
+        protected override bool IsRegularMove(BrownSquare end)
+        {
+            throw new NotImplementedException();
         }
     }
 }

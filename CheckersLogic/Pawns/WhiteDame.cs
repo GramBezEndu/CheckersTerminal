@@ -10,7 +10,12 @@ namespace CheckersLogic
         {
         }
 
-        public override bool CanMove(BrownSquare end)
+        public override bool IsTakedownMove(BrownSquare end)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override bool IsRegularMove(BrownSquare end)
         {
             throw new NotImplementedException();
         }
