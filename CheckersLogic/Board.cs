@@ -75,11 +75,35 @@ namespace CheckersLogic
                 //More than 1 move in one turn -> every move HAS TO be a takedown
                 else
                 {
-                    //keep the reference
+                    //ten przypadek do przemyślenia
+                    bool correctMove = true;
                     BrownSquare firstSquare = GetSelectedSquareAsStart();
+
+                    Pawn pawn = selectedSquareAsStart.Pawn;
+                    //keep the reference to pawn position
+                    Square pawnPos = pawn.position;
                     for(int i = 0;i<selectedSquaresToEnd.Count;i++)
                     {
-                        //if(s)
+                        if(pawn.IsTakedownMove(selectedSquaresToEnd[0]))
+                        {
+                            //
+                        }
+                        //Not valid move
+                        else
+                        {
+                            correctMove = false;
+                            break;
+                        }
+                    }
+                    //Trzeba przywrócić pozycję pionka
+                    if(correctMove == false)
+                    {
+                        pawn.position = pawnPos;
+                    }
+                    //Trzeba usunąć pionki przez które przeskakiwał (o ile nie będzie tego w metodzie)
+                    else
+                    {
+
                     }
                     //Create another method Pawn.MoveIsTakeDown and iterate
                     //+ change every move start and end square
