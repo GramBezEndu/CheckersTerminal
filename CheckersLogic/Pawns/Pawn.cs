@@ -11,15 +11,16 @@ namespace CheckersLogic
         /// </summary>
         protected bool isWhite;
         protected Square position;
-        protected List<Pawn> takedown;
+        protected List<Pawn> takedownList;
 
         public bool IsWhite { get => isWhite; set => isWhite = value; }
         public Square Position { get => position; set => position = value; }
-        public List<Pawn> Takedown { get => takedown; set => takedown = value; }
+        public List<Pawn> TakedownList { get => takedownList; set => takedownList = value; }
 
         protected Pawn (bool isWhite)
         {
             this.isWhite = isWhite;
+            this.takedownList = new List<Pawn>();
         }
 
         public bool IsDifferentColor(Pawn pawn)

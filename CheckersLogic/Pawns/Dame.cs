@@ -60,7 +60,7 @@ namespace CheckersLogic
                         {
                             if (i == absDistance - 1 && IsDifferentColor(target))
                             {
-                                takedown.Add(target);
+                                TakedownList.Add(target);
                                 return true;
                             }
                             return false;

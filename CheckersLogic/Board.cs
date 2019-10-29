@@ -110,14 +110,14 @@ namespace CheckersLogic
                     {
                         toBeRemoved.Pawn = null;
                         firstSquare.Pawn = pawn;
-                        pawn.Takedown = new List<Pawn>();
+                        pawn.TakedownList = new List<Pawn>();
                     }
                     //Trzeba usunąć pionki przez które przeskakiwał (o ile nie będzie tego w metodzie)
                     else
                     {
                         IsWhiteTurn = !IsWhiteTurn;
-                        Takedown(pawn.Takedown);
-                        pawn.Takedown = new List<Pawn>();
+                        Takedown(pawn.TakedownList);
+                        pawn.TakedownList = new List<Pawn>();
                     }
                     //Create another method Pawn.MoveIsTakeDown and iterate
                     //+ change every move start and end square
@@ -207,8 +207,8 @@ namespace CheckersLogic
             end.Pawn = pawn;
             //Switch after correct move (no double [and more] take implemented yet)
             IsWhiteTurn = !IsWhiteTurn;
-            Takedown(pawn.Takedown);
-            pawn.Takedown = new List<Pawn>();
+            Takedown(pawn.TakedownList);
+            pawn.TakedownList = new List<Pawn>();
             return;
         }
 

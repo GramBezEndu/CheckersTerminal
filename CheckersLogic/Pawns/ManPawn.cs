@@ -25,7 +25,7 @@ namespace CheckersLogic
                     {
                         if (IsDifferentColor(target))
                         {
-                            takedown.Add(target);
+                            TakedownList.Add(target);
                             return true;
                         }
                     }
