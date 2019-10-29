@@ -9,26 +9,35 @@ namespace CheckersLogic
         /// <summary>
         /// reference to square where pawn is
         /// </summary>
-        public Square position;
-        /// <summary>
-        /// reference to squares
-        /// </summary>
-        public Square[][] squares;
-        public List<Pawn> takedown = new List<Pawn>();
-        public Pawn(Square[][] sq)
+        protected bool isWhite;
+        protected Square position;
+        protected List<Pawn> takedown;
+
+        public bool IsWhite { get => isWhite; set => isWhite = value; }
+        public Square Position { get => position; set => position = value; }
+        public List<Pawn> Takedown { get => takedown; set => takedown = value; }
+
+        protected Pawn (bool isWhite)
         {
-            squares = sq;
+            this.isWhite = isWhite;
         }
-        public bool CanMove(BrownSquare end)
+
+        public bool IsDifferentColor(Pawn pawn)
         {
-            if (IsRegularMove(end))
-                return true;
-            else if (IsTakedownMove(end))
-                return true;
-            else
+            if (this.IsWhite == pawn.IsWhite)
                 return false;
+            return true;
         }
-        protected abstract bool IsRegularMove(BrownSquare end);
-        public abstract bool IsTakedownMove(BrownSquare end);
+
+        public bool IsValidMove(BrownSquare end, Square[][] squares)
+        {
+            if (IsRegularMove(end, squares))
+                return true;
+            if (IsTakedownMove(end, squares))
+                return true;
+            return false;
+        }
+        protected abstract bool IsRegularMove(BrownSquare end, Square[][] squares);
+        public abstract bool IsTakedownMove(BrownSquare end, Square[][] squares);
     }
 }

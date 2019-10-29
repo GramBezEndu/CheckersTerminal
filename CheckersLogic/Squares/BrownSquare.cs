@@ -15,7 +15,7 @@ namespace CheckersLogic
             {
                 _pawn = value;
                 if(_pawn != null)
-                    _pawn.position = this;
+                    _pawn.Position = this;
             }
         }
         public BrownSquare(int x, int y) : base(x, y)
