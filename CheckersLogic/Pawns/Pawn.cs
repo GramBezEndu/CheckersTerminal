@@ -14,6 +14,7 @@ namespace CheckersLogic
         /// reference to squares
         /// </summary>
         public Square[][] squares;
+        public List<Pawn> takedown = new List<Pawn>();
         public Pawn(Square[][] sq)
         {
             squares = sq;

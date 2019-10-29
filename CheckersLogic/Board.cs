@@ -70,7 +70,8 @@ namespace CheckersLogic
                 //First case: accepting only one move
                 if(selectedSquaresToEnd.Count == 1)
                 {
-                    MovePawn(GetSelectedSquareAsStart(), selectedSquaresToEnd[0]);
+                    if(CanMovePawn(GetSelectedSquareAsStart(), selectedSquaresToEnd[0]))
+                        MovePawn(GetSelectedSquareAsStart(), selectedSquaresToEnd[0]);
                 }
                 //More than 1 move in one turn -> every move HAS TO be a takedown
                 else
@@ -188,19 +189,30 @@ namespace CheckersLogic
         /// <param name="end"></param>
         private void MovePawn(BrownSquare start, BrownSquare end)
         {
-            //Could not move pawn
-            if (!CanMovePawn(start, end))
+            Pawn pawn = start.Pawn;
+            start.Pawn = null;
+            end.Pawn = pawn;
+            //Switch after correct move (no double [and more] take implemented yet)
+            IsBlackTurn = !IsBlackTurn;
+            Takedown(pawn.takedown);
+            pawn.takedown = new List<Pawn>();
+            return;
+        }
+
+        public void Takedown(List<Pawn> pawns)
+        {
+            foreach(Square[] square_row in squares)
             {
-                return;
-            }
-            else
-            {
-                Pawn pawn = start.Pawn;
-                start.Pawn = null;
-                end.Pawn = pawn;
-                //Switch after correct move (no double [and more] take implemented yet)
-                IsBlackTurn = !IsBlackTurn;
-                return;
+                foreach(Square square in square_row)
+                {
+                    if (square is BrownSquare)
+                    {
+                        if (pawns.Contains((square as BrownSquare).Pawn))
+                        {
+                            (square as BrownSquare).Pawn = null;
+                        }
+                    }
+                }
             }
         }
 

@@ -24,7 +24,10 @@ namespace CheckersLogic
                     if (target != null)
                     {
                         if (target is WhiteDame || target is WhiteMan)
+                        {
+                            takedown.Add(target);
                             return true;
+                        }
                     }
                 }
                 //case 2 (right)
@@ -34,7 +37,10 @@ namespace CheckersLogic
                     if (target != null)
                     {
                         if (target is WhiteDame || target is WhiteMan)
+                        {
+                            takedown.Add(target);
                             return true;
+                        }
                     }
                 }
             }

@@ -24,6 +24,7 @@ namespace CheckersLogic
                     if (target != null)
                     {
                         if (target is BlackDame || target is BlackMan)
+                            takedown.Add(target);
                             return true;
                     }
                 }
@@ -33,7 +34,8 @@ namespace CheckersLogic
                     Pawn target = (squares[end.xIndex - 1][end.yIndex - 1] as BrownSquare).Pawn;
                     if (target != null)
                     {
-                        if (target is BlackDame || target is BlackDame)
+                        if (target is BlackDame || target is BlackMan)
+                            takedown.Add(target);
                             return true;
                     }
                 }
