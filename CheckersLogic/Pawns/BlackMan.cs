@@ -14,26 +14,15 @@ namespace CheckersLogic
         {
             int x = position.xIndex;
             int y = position.yIndex;
-            //Common conditions
-            if(end.xIndex == x - 2 && end.Pawn == null)
+            int xDistance;
+            int yDistance;
+            if (end.Pawn == null)
             {
-                //case 1 (left)
-                if (end.yIndex == y - 2)
+                xDistance = end.xIndex - x;
+                yDistance = end.yIndex - y;
+                if (Math.Abs(xDistance) == 2 && Math.Abs(yDistance) == 2)
                 {
-                    Pawn target = (squares[end.xIndex + 1][end.yIndex + 1] as BrownSquare).Pawn;
-                    if (target != null)
-                    {
-                        if (target is WhiteDame || target is WhiteMan)
-                        {
-                            takedown.Add(target);
-                            return true;
-                        }
-                    }
-                }
-                //case 2 (right)
-                else if (end.yIndex == y + 2)
-                {
-                    Pawn target = (squares[end.xIndex + 1][end.yIndex - 1] as BrownSquare).Pawn;
+                    Pawn target = (squares[x + xDistance / 2][y + yDistance / 2] as BrownSquare).Pawn;
                     if (target != null)
                     {
                         if (target is WhiteDame || target is WhiteMan)
@@ -51,7 +40,9 @@ namespace CheckersLogic
         {
             int x = position.xIndex;
             int y = position.yIndex;
-            if(end.xIndex == x-1 && (end.yIndex == y -1 || end.yIndex == y +1) && end.Pawn == null)
+            int xDistance = end.xIndex - x;
+            int yDistance = end.yIndex - y;
+            if(xDistance == -1 && Math.Abs(yDistance) == 1 && end.Pawn == null)
             {
                 return true;
             }
