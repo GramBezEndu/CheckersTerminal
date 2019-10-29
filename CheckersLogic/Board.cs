@@ -116,6 +116,7 @@ namespace CheckersLogic
                     //Trzeba usunąć pionki przez które przeskakiwał (o ile nie będzie tego w metodzie)
                     else
                     {
+                        IsBlackTurn = !IsBlackTurn;
                         Takedown(pawn.takedown);
                         pawn.takedown = new List<Pawn>();
                     }
