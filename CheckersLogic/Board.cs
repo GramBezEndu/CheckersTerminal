@@ -82,29 +82,42 @@ namespace CheckersLogic
 
                     Pawn pawn = selectedSquareAsStart.Pawn;
                     //keep the reference to pawn position
-                    Square pawnPos = pawn.position;
+                    //Square pawnPos = pawn.position;
+                    BrownSquare toBeRemoved = firstSquare;
                     for(int i = 0;i<selectedSquaresToEnd.Count;i++)
                     {
-                        if(pawn.IsTakedownMove(selectedSquaresToEnd[0]))
+                        if(pawn.IsTakedownMove(selectedSquaresToEnd[i]))
                         {
-                            //
+                            //if (i == 0)
+                            //    firstSquare.Pawn = null;
+                            //else
+                            //    selectedSquaresToEnd[i - 1].Pawn = null;
+                            toBeRemoved.Pawn = null;
+                            selectedSquaresToEnd[i].Pawn = pawn;
+                            toBeRemoved = selectedSquaresToEnd[i];
                         }
                         //Not valid move
                         else
                         {
+                            //if (i != 0)
+                            //    selectedSquaresToEnd[i - 1].Pawn = null;
                             correctMove = false;
                             break;
                         }
                     }
+                    
                     //Trzeba przywrócić pozycję pionka
                     if(correctMove == false)
                     {
-                        pawn.position = pawnPos;
+                        toBeRemoved.Pawn = null;
+                        firstSquare.Pawn = pawn;
+                        pawn.takedown = new List<Pawn>();
                     }
                     //Trzeba usunąć pionki przez które przeskakiwał (o ile nie będzie tego w metodzie)
                     else
                     {
-
+                        Takedown(pawn.takedown);
+                        pawn.takedown = new List<Pawn>();
                     }
                     //Create another method Pawn.MoveIsTakeDown and iterate
                     //+ change every move start and end square
@@ -214,6 +227,7 @@ namespace CheckersLogic
                     }
                 }
             }
+
         }
 
         private void AddBlackPawns()
