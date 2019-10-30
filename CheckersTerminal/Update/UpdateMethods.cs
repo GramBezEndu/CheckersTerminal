@@ -47,7 +47,7 @@ namespace CheckersTerminal.Update
 
         public static void Update(this PlayerVsPlayer pvp)
         {
-            Console.WriteLine("PVP");
+            Console.ReadKey();
         }
     }
 }

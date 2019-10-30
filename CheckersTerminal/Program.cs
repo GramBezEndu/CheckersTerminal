@@ -12,6 +12,7 @@ namespace CheckersTerminal
         static State nextState;
         static void Main(string[] args)
         {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
             Console.CursorVisible = false;
             currentState = new MenuState();
             while (true)
@@ -21,8 +22,8 @@ namespace CheckersTerminal
                     currentState = nextState;
                     nextState = null;
                 }
-                currentState.Update();
                 currentState.Draw();
+                currentState.Update();
             }
         }
 
