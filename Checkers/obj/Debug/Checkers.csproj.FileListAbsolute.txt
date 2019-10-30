@@ -1,0 +1,5 @@
+/Users/wojciechmojsiejuk/Projects/Checkers/Checkers/bin/Debug/Checkers.exe
+/Users/wojciechmojsiejuk/Projects/Checkers/Checkers/bin/Debug/Checkers.pdb
+/Users/wojciechmojsiejuk/Projects/Checkers/Checkers/obj/Debug/Checkers.csprojAssemblyReference.cache
+/Users/wojciechmojsiejuk/Projects/Checkers/Checkers/obj/Debug/Checkers.exe
+/Users/wojciechmojsiejuk/Projects/Checkers/Checkers/obj/Debug/Checkers.pdb
