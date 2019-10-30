@@ -8,5 +8,10 @@ namespace CheckersTerminal.Draw
     {
         public int howManyCharacters;
         public ConsoleColor color;
+        public C(ConsoleColor c, int x)
+        {
+            color = c;
+            howManyCharacters = x;
+        }
     }
 }

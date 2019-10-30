@@ -6,14 +6,23 @@ namespace CheckersTerminal.Draw
 {
     public class Line
     {
-        string msg;
-        List<C> colors = new List<C>();
+        public String msg;
+        public List<C> colors = new List<C>();
+
+        /// <summary>
+        /// new empty line
+        /// </summary>
+        public Line()
+        {
+            msg = "";
+        }
 
         public Line(string message, List<C> c)
         {
             msg = message;
             colors = c;
         }
+
 
         public void DrawLine()
         {
