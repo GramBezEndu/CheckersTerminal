@@ -183,8 +183,8 @@ namespace CheckersTerminal.Draw
         {
             List<Line> lines = new List<Line>();
             lines.Add(new Line("+----+", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
-            lines.Add(new Line("-xxxx-", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
-            lines.Add(new Line("-xxxx-", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
+            lines.Add(new Line("-xxxx-", new List<C>() { new C(ConsoleColor.Yellow, 6, ConsoleColor.Black) }));
+            lines.Add(new Line("-xxxx-", new List<C>() { new C(ConsoleColor.Yellow, 6, ConsoleColor.Black) }));
             lines.Add(new Line("+----+", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
             return lines;
         }

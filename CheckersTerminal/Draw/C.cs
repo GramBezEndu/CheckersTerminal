@@ -7,11 +7,13 @@ namespace CheckersTerminal.Draw
     public class C
     {
         public int howManyCharacters;
-        public ConsoleColor color;
-        public C(ConsoleColor c, int x)
+        public ConsoleColor backgroundColor;
+        public ConsoleColor foregroundColor;
+        public C(ConsoleColor c, int x, ConsoleColor foreground = ConsoleColor.Gray)
         {
-            color = c;
+            backgroundColor = c;
             howManyCharacters = x;
+            foregroundColor = foreground;
         }
     }
 }

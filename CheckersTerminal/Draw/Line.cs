@@ -23,18 +23,26 @@ namespace CheckersTerminal.Draw
             colors = c;
         }
 
+        public void Add(Line line)
+        {
+            msg += line.msg;
+            colors.AddRange(line.colors);
+        }
+
 
         public void DrawLine()
         {
             int actualIndex = 0;
             foreach(var c in colors)
             {
-                Console.BackgroundColor = c.color;
+                Console.BackgroundColor = c.backgroundColor;
+                Console.ForegroundColor = c.foregroundColor;
                 Console.Write(msg.Substring(actualIndex, c.howManyCharacters));
                 actualIndex += c.howManyCharacters;
             }
             //reset color
             Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine();
         }
     }
