@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Text;
 using CheckersLogic;
 using CheckersLogic.States;
@@ -99,13 +100,17 @@ namespace CheckersTerminal.Draw
                 //List of final (fully constructed) lines
                 List<Line> output = new List<Line>();
 
-                List<Line> actualBoardRow = new List<Line>() { new Line(), new Line(), new Line(), new Line() };
+                List<Line> actualBoardRow = new List<Line>() { new Line(), new Line(), new Line() };
                 for (int j = 0; j < board.squares[i].Length; j++)
                 {
                     actualBoardRow.Polacz(board.squares[i][j].CreateString());
                 }
                 output.AddRange(actualBoardRow);
-
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    //TO DO: ustawić na odpowiednią wartość
+                    Console.SetWindowSize(50, 25);
+                }
                 foreach (var o in output)
                     o.DrawLine();
             }
@@ -158,61 +163,55 @@ namespace CheckersTerminal.Draw
             else
                 return CreateWhiteSquare();
         }
-
+        //TO DO: połączyć metody CreateWhiteSquare i CreateEmptySquare
         public static List<Line> CreateWhiteSquare(/*this Square s*/)
         {
             List<Line> lines = new List<Line>();
-            lines.Add(new Line("+----+", new List<C>() { new C(ConsoleColor.Black, 6) }));
-            lines.Add(new Line("-    -", new List<C>() { new C(ConsoleColor.Black, 6) }));
-            lines.Add(new Line("-    -", new List<C>() { new C(ConsoleColor.Black, 6) }));
-            lines.Add(new Line("+----+", new List<C>() { new C(ConsoleColor.Black, 6) }));
+            lines.Add(new Line("      ", new List<C>() { new C(ConsoleColor.DarkGray, 6) }));
+            lines.Add(new Line("      ", new List<C>() { new C(ConsoleColor.DarkGray, 6) }));
+            lines.Add(new Line("      ", new List<C>() { new C(ConsoleColor.DarkGray, 6) }));
             return lines;
         }
 
         public static List<Line> CreateEmptySquare(/*this Square s*/)
         {
             List<Line> lines = new List<Line>();
-            lines.Add(new Line("+----+", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
-            lines.Add(new Line("-    -", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
-            lines.Add(new Line("-    -", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
-            lines.Add(new Line("+----+", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
+            lines.Add(new Line("      ", new List<C>() { new C(ConsoleColor.Gray, 6) }));
+            lines.Add(new Line("      ", new List<C>() { new C(ConsoleColor.Gray, 6) }));
+            lines.Add(new Line("      ", new List<C>() { new C(ConsoleColor.Gray, 6) }));
             return lines;
         }
 
         public static List<Line> CreateBlackManSquare()
         {
             List<Line> lines = new List<Line>();
-            lines.Add(new Line("+----+", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
-            lines.Add(new Line("-xxxx-", new List<C>() { new C(ConsoleColor.Yellow, 6, ConsoleColor.Black) }));
-            lines.Add(new Line("-xxxx-", new List<C>() { new C(ConsoleColor.Yellow, 6, ConsoleColor.Black) }));
-            lines.Add(new Line("+----+", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
+            lines.Add(new Line("      ", new List<C>() { new C(ConsoleColor.Gray, 6) }));
+            lines.Add(new Line("  ♟   ", new List<C>() { new C(ConsoleColor.Gray, 6, ConsoleColor.Black) }));
+            lines.Add(new Line("      ", new List<C>() { new C(ConsoleColor.Gray, 6) }));
             return lines;
         }
         public static List<Line> CreateWhiteManSquare()
         {
             List<Line> lines = new List<Line>();
-            lines.Add(new Line("+----+", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
-            lines.Add(new Line("-yyyy-", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
-            lines.Add(new Line("-yyyy-", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
-            lines.Add(new Line("+----+", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
+            lines.Add(new Line("      ", new List<C>() { new C(ConsoleColor.Gray, 6) }));
+            lines.Add(new Line("  ♙   ", new List<C>() { new C(ConsoleColor.Gray, 6, ConsoleColor.Black) }));
+            lines.Add(new Line("      ", new List<C>() { new C(ConsoleColor.Gray, 6) }));
             return lines;
         }
         public static List<Line> CreateWhiteDameSquare()
         {
             List<Line> lines = new List<Line>();
-            lines.Add(new Line("+----+", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
-            lines.Add(new Line("-YYYY-", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
-            lines.Add(new Line("-YYYY-", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
-            lines.Add(new Line("+----+", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
+            lines.Add(new Line("      ", new List<C>() { new C(ConsoleColor.Gray, 6) }));
+            lines.Add(new Line("  ♕   ", new List<C>() { new C(ConsoleColor.Gray, 6) }));
+            lines.Add(new Line("      ", new List<C>() { new C(ConsoleColor.Gray, 6) }));
             return lines;
         }
         public static List<Line> CreateBlackDameSquare()
         {
             List<Line> lines = new List<Line>();
-            lines.Add(new Line("+----+", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
-            lines.Add(new Line("-XXXX-", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
-            lines.Add(new Line("-XXXX-", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
-            lines.Add(new Line("+----+", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
+            lines.Add(new Line("      ", new List<C>() { new C(ConsoleColor.Gray, 6) }));
+            lines.Add(new Line("  ♛   ", new List<C>() { new C(ConsoleColor.Gray, 6) }));
+            lines.Add(new Line("      ", new List<C>() { new C(ConsoleColor.Gray, 6) }));
             return lines;
         }
 
