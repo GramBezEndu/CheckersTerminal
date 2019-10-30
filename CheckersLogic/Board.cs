@@ -28,6 +28,8 @@ namespace CheckersLogic
             }
         }
 
+        private bool gameFinished = false;
+
         public BrownSquare GetSelectedSquareAsStart()
         {
             return selectedSquareAsStart;
@@ -35,7 +37,7 @@ namespace CheckersLogic
 
         public void SetSelectedSquareAsStart(BrownSquare value)
         {
-            if (value == null)
+            if (value == null || value.Pawn == null)
                 selectedSquareAsStart = null;
             else if (!IsWhiteTurn && (!value.Pawn.IsWhite))
                 selectedSquareAsStart = value;
@@ -47,6 +49,10 @@ namespace CheckersLogic
         private const string whiteTurnText = "WHITE TURN";
 
         private const string notValidMoveText = "NOT VALID MOVE";
+        /// <summary>
+        /// Indicates who won game (black or white)
+        /// </summary>
+        private string whoWonText;
 
         public bool blackPawnsAtBeginningOnBottom = true;
         public Board()
@@ -60,6 +66,40 @@ namespace CheckersLogic
         {
             SetSelectedSquareAsStart(null);
             selectedSquaresToEnd = new List<BrownSquare>();
+        }
+
+        /// <summary>
+        /// Method checks and turns pawn into dame
+        /// </summary>
+        /// <param name="pawn"></param>
+        public void ChangePawnToDame(Pawn pawn)
+        {
+            if(pawn.IsWhite)
+            {
+                if(pawn.Position.xIndex == squares.Length - 1)
+                {
+                    if(pawn is ManPawn)
+                    {
+                        //Turn into dame
+                        Square position = pawn.Position;
+                        pawn = new Dame(true);
+                        (position as BrownSquare).Pawn = pawn;
+                    }
+                }
+            }
+            else if(pawn.IsWhite == false)
+            {
+                if (pawn.Position.xIndex == 0)
+                {
+                    if (pawn is ManPawn)
+                    {
+                        //Turn into dame
+                        Square position = pawn.Position;
+                        pawn = new Dame(false);
+                        (position as BrownSquare).Pawn = pawn;
+                    }
+                }
+            }
         }
 
         public void AcceptMove()
@@ -118,6 +158,7 @@ namespace CheckersLogic
                         IsWhiteTurn = !IsWhiteTurn;
                         Takedown(pawn.TakedownList);
                         pawn.TakedownList = new List<Pawn>();
+                        ChangePawnToDame(pawn);
                     }
                     //Create another method Pawn.MoveIsTakeDown and iterate
                     //+ change every move start and end square
@@ -209,10 +250,11 @@ namespace CheckersLogic
             IsWhiteTurn = !IsWhiteTurn;
             Takedown(pawn.TakedownList);
             pawn.TakedownList = new List<Pawn>();
+            ChangePawnToDame(pawn);
             return;
         }
 
-        public void Takedown(List<Pawn> pawns)
+        private void Takedown(List<Pawn> pawns)
         {
             foreach(Square[] square_row in squares)
             {
@@ -259,6 +301,52 @@ namespace CheckersLogic
             {
                 throw new NotImplementedException("This settup (black starting on top) not coded");
             }
+        }
+
+        private void CheckForGameEnd()
+        {
+            //condition 1
+            NoPawnsLeft();
+            //condition 2 (no valid move possible)
+        }
+
+        private void NoPawnsLeft()
+        {
+            bool foundWhitePawn = false;
+            bool foundBlackPawn = false;
+            foreach (var s in squares)
+            {
+                foreach (var square in s)
+                {
+                    if (square is BrownSquare)
+                    {
+                        if ((square as BrownSquare).Pawn != null)
+                        {
+                            if ((square as BrownSquare).Pawn.IsWhite)
+                                foundWhitePawn = true;
+                            else
+                                foundBlackPawn = true;
+                        }
+                    }
+                }
+            }
+            if (!foundBlackPawn)
+            {
+                EndGame(true);
+            }
+            else if (!foundWhitePawn)
+            {
+                EndGame(false);
+            }
+        }
+
+        private void EndGame(bool whiteWon)
+        {
+            gameFinished = true;
+            if(whiteWon)
+                whoWonText = "WHITE WINS!";
+            else
+                whoWonText = "BLACK WINS!";
         }
 
         private void CreateSquares()

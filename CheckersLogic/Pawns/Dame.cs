@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CheckersLogic
 {
-    public abstract class Dame : Pawn
+    public class Dame : Pawn
     {
         public Dame(bool isWhite) : base(isWhite)
         {
