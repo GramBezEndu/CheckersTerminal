@@ -13,9 +13,21 @@ namespace CheckersTerminal
     class Program
     {
         static State currentState;
+        public static bool NeedToRedraw = true;
         static State nextState;
+        public static ConsoleColor foreground;
+        public static ConsoleColor background;
         static void Main(string[] args)
         {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                //TO DO: ustawić na odpowiednią wartość
+                Console.SetWindowSize(70, 31);
+            }
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            Console.CursorVisible = false;
+            foreground = Console.ForegroundColor;
+            background = Console.BackgroundColor;
             try
             {
                 IntPtr inHandle = GetStdHandle(STD_INPUT_HANDLE);
@@ -26,20 +38,21 @@ namespace CheckersTerminal
                 mode |= ENABLE_MOUSE_INPUT; //enable
                 SetConsoleMode(inHandle, mode);
                 ConsoleListener.Start();
-                ConsoleListener.MouseEvent += Click;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine("Mouse component could not initialize");
             }
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
-            Console.CursorVisible = false;
+
             currentState = new MenuState();
+            currentState.Init();
+
             while (true)
             {
                 if (nextState != null)
                 {
                     currentState = nextState;
+                    currentState.Init();
                     nextState = null;
                 }
                 currentState.Draw();
@@ -47,83 +60,82 @@ namespace CheckersTerminal
             }
         }
 
-        private static void Click(MOUSE_EVENT_RECORD r)
-        {
-            //Console.WriteLine(r.dwMousePosition.X + " " + r.dwMousePosition.Y + " " + r.dwButtonState);
-            if(r.dwMousePosition.Y >= 2 && r.dwMousePosition.Y <= 10
-                && r.dwMousePosition.X >= 0 && r.dwMousePosition.X <= 8
-                && r.dwButtonState == 0x0001)
-            {
-                Debug.WriteLine("Clicked square1");
-            }
-        }
+        //private static void Click(MOUSE_EVENT_RECORD r)
+        //{
+        //    //Console.WriteLine(r.dwMousePosition.X + " " + r.dwMousePosition.Y + " " + r.dwButtonState);
+        //    if (r.dwMousePosition.Y >= 2 && r.dwMousePosition.Y <= 10
+        //        && r.dwMousePosition.X >= 0 && r.dwMousePosition.X <= 8
+        //        && r.dwButtonState == 0x0001)
+        //    {
+        //        //Debug.WriteLine("Clicked square1");
+        //    }
+        //}
 
         public static void ChangeState(State newState)
         {
             nextState = newState;
         }
     }
-        public static class ConsoleListener
+    public static class ConsoleListener
+    {
+        public static event ConsoleMouseEvent MouseEvent;
+
+        public static event ConsoleKeyEvent KeyEvent;
+
+        public static event ConsoleWindowBufferSizeEvent WindowBufferSizeEvent;
+
+        private static bool Run = false;
+
+        public static void Start()
         {
-            public static event ConsoleMouseEvent MouseEvent;
-
-            public static event ConsoleKeyEvent KeyEvent;
-
-            public static event ConsoleWindowBufferSizeEvent WindowBufferSizeEvent;
-
-            private static bool Run = false;
-
-
-            public static void Start()
+            if (!Run)
             {
-                if (!Run)
+                Run = true;
+                IntPtr handleIn = GetStdHandle(STD_INPUT_HANDLE);
+                new Thread(() =>
                 {
-                    Run = true;
-                    IntPtr handleIn = GetStdHandle(STD_INPUT_HANDLE);
-                    new Thread(() =>
+                    while (true)
                     {
-                        while (true)
-                        {
-                            uint numRead = 0;
-                            INPUT_RECORD[] record = new INPUT_RECORD[1];
-                            record[0] = new INPUT_RECORD();
-                            ReadConsoleInput(handleIn, record, 1, ref numRead);
-                            if (Run)
-                                switch (record[0].EventType)
-                                {
-                                    case INPUT_RECORD.MOUSE_EVENT:
-                                        MouseEvent?.Invoke(record[0].MouseEvent);
-                                        break;
-                                    case INPUT_RECORD.KEY_EVENT:
-                                        KeyEvent?.Invoke(record[0].KeyEvent);
-                                        break;
-                                    case INPUT_RECORD.WINDOW_BUFFER_SIZE_EVENT:
-                                        WindowBufferSizeEvent?.Invoke(record[0].WindowBufferSizeEvent);
-                                        break;
-                                }
-                            else
+                        uint numRead = 0;
+                        INPUT_RECORD[] record = new INPUT_RECORD[1];
+                        record[0] = new INPUT_RECORD();
+                        ReadConsoleInput(handleIn, record, 1, ref numRead);
+                        if (Run)
+                            switch (record[0].EventType)
                             {
-                                uint numWritten = 0;
-                                WriteConsoleInput(handleIn, record, 1, ref numWritten);
-                                return;
+                                case INPUT_RECORD.MOUSE_EVENT:
+                                    MouseEvent?.Invoke(record[0].MouseEvent);
+                                    break;
+                                case INPUT_RECORD.KEY_EVENT:
+                                    KeyEvent?.Invoke(record[0].KeyEvent);
+                                    break;
+                                case INPUT_RECORD.WINDOW_BUFFER_SIZE_EVENT:
+                                    WindowBufferSizeEvent?.Invoke(record[0].WindowBufferSizeEvent);
+                                    break;
                             }
+                        else
+                        {
+                            uint numWritten = 0;
+                            WriteConsoleInput(handleIn, record, 1, ref numWritten);
+                            return;
                         }
-                    }).Start();
-                }
+                    }
+                }).Start();
             }
-
-            public static void Stop() => Run = false;
-
-
-            public delegate void ConsoleMouseEvent(MOUSE_EVENT_RECORD r);
-
-            public delegate void ConsoleKeyEvent(KEY_EVENT_RECORD r);
-
-            public delegate void ConsoleWindowBufferSizeEvent(WINDOW_BUFFER_SIZE_RECORD r);
-
         }
 
-        public static class NativeMethods
+        public static void Stop() => Run = false;
+
+
+        public delegate void ConsoleMouseEvent(MOUSE_EVENT_RECORD r);
+
+        public delegate void ConsoleKeyEvent(KEY_EVENT_RECORD r);
+
+        public delegate void ConsoleWindowBufferSizeEvent(WINDOW_BUFFER_SIZE_RECORD r);
+
+    }
+
+    public static class NativeMethods
     {
         public struct COORD
         {
@@ -248,6 +260,5 @@ namespace CheckersTerminal
 
         [DllImportAttribute("kernel32.dll", CharSet = CharSet.Unicode)]
         public static extern bool WriteConsoleInput(IntPtr hConsoleInput, INPUT_RECORD[] lpBuffer, uint nLength, ref uint lpNumberOfEventsWritten);
-
     }
 }

@@ -1,5 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Text;
 using CheckersLogic;
 using CheckersLogic.States;
@@ -9,69 +11,77 @@ namespace CheckersTerminal.Draw
     public static class DrawMethods
     {
         public static void Draw(this MenuState menuState)
+        {
+            //Grafiki
+            string terminal_title =
+            " ██████╗██╗  ██╗███████╗ ██████╗██╗  ██╗███████╗██████╗ ███████╗\n" +
+            "██╔════╝██║  ██║██╔════╝██╔════╝██║ ██╔╝██╔════╝██╔══██╗██╔════╝\n" +
+            "██║     ███████║█████╗  ██║     █████╔╝ █████╗  ██████╔╝███████╗\n" +
+            "██║     ██╔══██║██╔══╝  ██║     ██╔═██╗ ██╔══╝  ██╔══██╗╚════██║\n" +
+            "╚██████╗██║  ██║███████╗╚██████╗██║  ██╗███████╗██║  ██║███████║\n" +
+            " ╚═════╝╚═╝  ╚═╝╚══════╝ ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝\n" +
+            "\n";
+
+            //string terminal_title =
+            //" ▄████▄   ██░ ██ ▓█████  ▄████▄   ██ ▄█▀▓█████  ██▀███    ██████ \n" +
+            //"▒██▀ ▀█  ▓██░ ██▒▓█   ▀ ▒██▀ ▀█   ██▄█▒ ▓█   ▀ ▓██ ▒ ██▒▒██    ▒ \n" +
+            //"▒▓█    ▄ ▒██▀▀██░▒███   ▒▓█    ▄ ▓███▄░ ▒███   ▓██ ░▄█ ▒░ ▓██▄   \n" +
+            //"▒▓▓▄ ▄██▒░▓█ ░██ ▒▓█  ▄ ▒▓▓▄ ▄██▒▓██ █▄ ▒▓█  ▄ ▒██▀▀█▄    ▒   ██▒\n" +
+            //"▒ ▓███▀ ░░▓█▒░██▓░▒████▒▒ ▓███▀ ░▒██▒ █▄░▒████▒░██▓ ▒██▒▒██████▒▒\n" +
+            //"░ ░▒ ▒  ░ ▒ ░░▒░▒░░ ▒░ ░░ ░▒ ▒  ░▒ ▒▒ ▓▒░░ ▒░ ░░ ▒▓ ░▒▓░▒ ▒▓▒ ▒ ░\n" +
+            //"  ░  ▒    ▒ ░▒░ ░ ░ ░  ░  ░  ▒   ░ ░▒ ▒░ ░ ░  ░  ░▒ ░ ▒░░ ░▒  ░ ░\n" +
+            //"░         ░  ░░ ░   ░   ░        ░ ░░ ░    ░     ░░   ░ ░  ░  ░  \n" +
+            //"░ ░       ░  ░  ░   ░  ░░ ░      ░  ░      ░  ░   ░           ░  \n" +
+            //"░                       ░                                        \n";
+
+
+            string credits = "By Paweł Bąk, Wojciech Mojsiejuk, Jakub Mroczkowski\n";
+
+            //Rysowanie menu
+            if(Program.NeedToRedraw)
             {
-                //Grafiki
-                string terminal_title =
-                " ██████╗██╗  ██╗███████╗ ██████╗██╗  ██╗███████╗██████╗ ███████╗\n" +
-                "██╔════╝██║  ██║██╔════╝██╔════╝██║ ██╔╝██╔════╝██╔══██╗██╔════╝\n" +
-                "██║     ███████║█████╗  ██║     █████╔╝ █████╗  ██████╔╝███████╗\n" +
-                "██║     ██╔══██║██╔══╝  ██║     ██╔═██╗ ██╔══╝  ██╔══██╗╚════██║\n" +
-                "╚██████╗██║  ██║███████╗╚██████╗██║  ██╗███████╗██║  ██║███████║\n" +
-                " ╚═════╝╚═╝  ╚═╝╚══════╝ ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝\n" +
-                "\n";
-
-                //string terminal_title =
-                //" ▄████▄   ██░ ██ ▓█████  ▄████▄   ██ ▄█▀▓█████  ██▀███    ██████ \n" +
-                //"▒██▀ ▀█  ▓██░ ██▒▓█   ▀ ▒██▀ ▀█   ██▄█▒ ▓█   ▀ ▓██ ▒ ██▒▒██    ▒ \n" +
-                //"▒▓█    ▄ ▒██▀▀██░▒███   ▒▓█    ▄ ▓███▄░ ▒███   ▓██ ░▄█ ▒░ ▓██▄   \n" +
-                //"▒▓▓▄ ▄██▒░▓█ ░██ ▒▓█  ▄ ▒▓▓▄ ▄██▒▓██ █▄ ▒▓█  ▄ ▒██▀▀█▄    ▒   ██▒\n" +
-                //"▒ ▓███▀ ░░▓█▒░██▓░▒████▒▒ ▓███▀ ░▒██▒ █▄░▒████▒░██▓ ▒██▒▒██████▒▒\n" +
-                //"░ ░▒ ▒  ░ ▒ ░░▒░▒░░ ▒░ ░░ ░▒ ▒  ░▒ ▒▒ ▓▒░░ ▒░ ░░ ▒▓ ░▒▓░▒ ▒▓▒ ▒ ░\n" +
-                //"  ░  ▒    ▒ ░▒░ ░ ░ ░  ░  ░  ▒   ░ ░▒ ▒░ ░ ░  ░  ░▒ ░ ▒░░ ░▒  ░ ░\n" +
-                //"░         ░  ░░ ░   ░   ░        ░ ░░ ░    ░     ░░   ░ ░  ░  ░  \n" +
-                //"░ ░       ░  ░  ░   ░  ░░ ░      ░  ░      ░  ░   ░           ░  \n" +
-                //"░                       ░                                        \n";
-
-
-                string credits = "By Paweł Bąk, Wojciech Mojsiejuk, Jakub Mroczkowski\n";
-
-                //Rysowanie menu
-
-                Console.Clear();
-                Console.Write(terminal_title);
-                Console.WriteLine(credits);
-                string border = " * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *";
-                string empty_border = " *                                                                 *";
-                string option_border = " *    ";
-                Console.WriteLine(border);
-
-
-                for (int i = 0; i < menuState.options.Count; i++)
-                {
-                    Console.WriteLine(empty_border);
-                    Console.Write(option_border);
-                    if (i == menuState.index)
-                    {
-                        Console.BackgroundColor = ConsoleColor.Gray;
-                        Console.ForegroundColor = ConsoleColor.Black;
-                        Console.Write(menuState.options[i].Name);
-                    }
-                    else
-                    {
-                        Console.Write(menuState.options[i].Name);
-                    }
-                    Console.ResetColor();
-                    int space = border.Length - option_border.Length - menuState.options[i].Name.Length - 1;
-                    for (int j = 0; j < space; j++)
-                    {
-                        Console.Write(" ");
-                    }
-                    Console.Write("*\n");
-                    Console.WriteLine(empty_border);
-                }
-                Console.WriteLine(border);
-               
+                DrawMenu(menuState, terminal_title, credits);
+                Program.NeedToRedraw = false;
             }
+        }
+
+        private static void DrawMenu(MenuState menuState, string terminal_title, string credits)
+        {
+            Console.Clear();
+            Console.Write(terminal_title);
+            Console.WriteLine(credits);
+            string border = " * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *";
+            string empty_border = " *                                                                 *";
+            string option_border = " *    ";
+            Console.WriteLine(border);
+
+
+            for (int i = 0; i < menuState.options.Count; i++)
+            {
+                Console.WriteLine(empty_border);
+                Console.Write(option_border);
+                if (i == menuState.index)
+                {
+                    Console.BackgroundColor = ConsoleColor.Gray;
+                    Console.ForegroundColor = ConsoleColor.Black;
+                    Console.Write(menuState.options[i].Name);
+                }
+                else
+                {
+                    Console.Write(menuState.options[i].Name);
+                }
+                Console.ResetColor();
+                int space = border.Length - option_border.Length - menuState.options[i].Name.Length - 1;
+                for (int j = 0; j < space; j++)
+                {
+                    Console.Write(" ");
+                }
+                Console.Write("*\n");
+                Console.WriteLine(empty_border);
+            }
+            Console.WriteLine(border);
+        }
+
         public static void Draw(this State State)
         {
             if (State is MenuState)
@@ -85,10 +95,18 @@ namespace CheckersTerminal.Draw
         }
         public static void Draw(this GameState state)
         {
-            Console.Clear();
-            Console.WriteLine(state.GetType().Name);
-            Console.WriteLine(state.board.TurnMessage);
-            state.board.Draw();
+            if(Program.NeedToRedraw)
+            {
+                Console.Clear();
+                Console.WriteLine(state.GetType().Name);
+                Console.WriteLine(state.board.TurnMessage);
+                state.board.Draw();
+                Console.Write("Accept move");
+                for(int i=0;i<27;i++)
+                    Console.Write(' ');
+                Console.WriteLine("Reset move");
+                Program.NeedToRedraw = false;
+            }
         }
 
         public static void Draw(this Board board)
@@ -99,13 +117,24 @@ namespace CheckersTerminal.Draw
                 //List of final (fully constructed) lines
                 List<Line> output = new List<Line>();
 
-                List<Line> actualBoardRow = new List<Line>() { new Line(), new Line(), new Line(), new Line() };
+                List<Line> actualBoardRow = new List<Line>() { new Line(), new Line(), new Line() };
                 for (int j = 0; j < board.squares[i].Length; j++)
                 {
-                    actualBoardRow.Polacz(board.squares[i][j].CreateString());
+                    if (board.GetSelectedSquareAsStart() == board.squares[i][j])
+                        actualBoardRow.Polacz(board.squares[i][j].CreateString(true, false));
+                    else if (board.squares[i][j] is BrownSquare && board.selectedSquaresToEnd.Contains(board.squares[i][j] as BrownSquare))
+                    {
+                        actualBoardRow.Polacz(board.squares[i][j].CreateString(false, true));
+                    }
+                    else
+                        actualBoardRow.Polacz(board.squares[i][j].CreateString(false, false));
                 }
                 output.AddRange(actualBoardRow);
-
+                //if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                //{
+                //    //TO DO: ustawić na odpowiednią wartość
+                //    Console.SetWindowSize(50, 25);
+                //}
                 foreach (var o in output)
                     o.DrawLine();
             }
@@ -131,88 +160,116 @@ namespace CheckersTerminal.Draw
             */
         }
 
-        public static List<Line> CreateString(this Square s)
+        public static List<Line> CreateString(this Square s, bool isSelectedAsStart = false, bool isSelectedAsEnd = false)
         {
             if(s is BrownSquare)
             {
                 var square = (s as BrownSquare);
                 if (square.Pawn == null)
                 {
-                    return CreateEmptySquare();
+                    return CreateEmptySquare(isSelectedAsEnd);
                 }
                 else if(square.Pawn is ManPawn)
                 {
                     if (square.Pawn.IsWhite)
-                        return CreateWhiteManSquare();
+                        return CreateWhiteManSquare(isSelectedAsStart, isSelectedAsEnd);
                     else
-                        return CreateBlackManSquare();
+                        return CreateBlackManSquare(isSelectedAsStart, isSelectedAsEnd);
                 }
                 else
                 {
                     if (square.Pawn.IsWhite)
-                        return CreateWhiteDameSquare();
+                        return CreateWhiteDameSquare(isSelectedAsStart, isSelectedAsEnd);
                     else
-                        return CreateBlackDameSquare();
+                        return CreateBlackDameSquare(isSelectedAsStart, isSelectedAsEnd);
                 }
             }
             else
                 return CreateWhiteSquare();
         }
-
-        public static List<Line> CreateWhiteSquare(/*this Square s*/)
+        //TO DO: połączyć metody CreateWhiteSquare i CreateEmptySquare
+        public static List<Line> CreateWhiteSquare()
         {
             List<Line> lines = new List<Line>();
-            lines.Add(new Line("+----+", new List<C>() { new C(ConsoleColor.Black, 6) }));
-            lines.Add(new Line("-    -", new List<C>() { new C(ConsoleColor.Black, 6) }));
-            lines.Add(new Line("-    -", new List<C>() { new C(ConsoleColor.Black, 6) }));
-            lines.Add(new Line("+----+", new List<C>() { new C(ConsoleColor.Black, 6) }));
+            ConsoleColor color = ConsoleColor.DarkGray;
+            lines.Add(new Line("      ", new List<C>() { new C(color, 6) }));
+            lines.Add(new Line("      ", new List<C>() { new C(color, 6) }));
+            lines.Add(new Line("      ", new List<C>() { new C(color, 6) }));
             return lines;
         }
 
-        public static List<Line> CreateEmptySquare(/*this Square s*/)
+        public static List<Line> CreateEmptySquare(bool isSelectedAsEnd = false)
         {
             List<Line> lines = new List<Line>();
-            lines.Add(new Line("+----+", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
-            lines.Add(new Line("-    -", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
-            lines.Add(new Line("-    -", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
-            lines.Add(new Line("+----+", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
+            ConsoleColor color;
+            if (isSelectedAsEnd)
+                color = ConsoleColor.Red;
+            else
+                color = ConsoleColor.Gray;
+            lines.Add(new Line("      ", new List<C>() { new C(color, 6) }));
+            lines.Add(new Line("      ", new List<C>() { new C(color, 6) }));
+            lines.Add(new Line("      ", new List<C>() { new C(color, 6) }));
             return lines;
         }
 
-        public static List<Line> CreateBlackManSquare()
+        public static List<Line> CreateBlackManSquare(bool isSelectedAsStart = false, bool isSelectedAsEnd = false)
         {
             List<Line> lines = new List<Line>();
-            lines.Add(new Line("+----+", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
-            lines.Add(new Line("-xxxx-", new List<C>() { new C(ConsoleColor.Yellow, 6, ConsoleColor.Black) }));
-            lines.Add(new Line("-xxxx-", new List<C>() { new C(ConsoleColor.Yellow, 6, ConsoleColor.Black) }));
-            lines.Add(new Line("+----+", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
+            ConsoleColor color;
+            if (isSelectedAsStart)
+                color = ConsoleColor.Green;
+            else if (isSelectedAsEnd)
+                color = ConsoleColor.Red;
+            else
+                color = ConsoleColor.Gray;
+            lines.Add(new Line("      ", new List<C>() { new C(color, 6) }));
+            lines.Add(new Line("  ♟   ", new List<C>() { new C(color, 6, ConsoleColor.Black) }));
+            lines.Add(new Line("      ", new List<C>() { new C(color, 6) }));
             return lines;
         }
-        public static List<Line> CreateWhiteManSquare()
+        public static List<Line> CreateWhiteManSquare(bool isSelectedAsStart = false, bool isSelectedAsEnd = false)
         {
             List<Line> lines = new List<Line>();
-            lines.Add(new Line("+----+", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
-            lines.Add(new Line("-yyyy-", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
-            lines.Add(new Line("-yyyy-", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
-            lines.Add(new Line("+----+", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
+            ConsoleColor color;
+            if (isSelectedAsStart)
+                color = ConsoleColor.Green;
+            else if (isSelectedAsEnd)
+                color = ConsoleColor.Red;
+            else
+                color = ConsoleColor.Gray;
+            lines.Add(new Line("      ", new List<C>() { new C(color, 6) }));
+            lines.Add(new Line("  ♙   ", new List<C>() { new C(color, 6, ConsoleColor.Black) }));
+            lines.Add(new Line("      ", new List<C>() { new C(color, 6) }));
             return lines;
         }
-        public static List<Line> CreateWhiteDameSquare()
+        public static List<Line> CreateWhiteDameSquare(bool isSelectedAsStart = false, bool isSelectedAsEnd = false)
         {
             List<Line> lines = new List<Line>();
-            lines.Add(new Line("+----+", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
-            lines.Add(new Line("-YYYY-", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
-            lines.Add(new Line("-YYYY-", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
-            lines.Add(new Line("+----+", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
+            ConsoleColor color;
+            if (isSelectedAsStart)
+                color = ConsoleColor.Green;
+            else if (isSelectedAsEnd)
+                color = ConsoleColor.Red;
+            else
+                color = ConsoleColor.Gray;
+            lines.Add(new Line("      ", new List<C>() { new C(color, 6) }));
+            lines.Add(new Line("  ♕   ", new List<C>() { new C(color, 6, ConsoleColor.Black) }));
+            lines.Add(new Line("      ", new List<C>() { new C(color, 6) }));
             return lines;
         }
-        public static List<Line> CreateBlackDameSquare()
+        public static List<Line> CreateBlackDameSquare(bool isSelectedAsStart = false, bool isSelectedAsEnd = false)
         {
             List<Line> lines = new List<Line>();
-            lines.Add(new Line("+----+", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
-            lines.Add(new Line("-XXXX-", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
-            lines.Add(new Line("-XXXX-", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
-            lines.Add(new Line("+----+", new List<C>() { new C(ConsoleColor.Yellow, 6) }));
+            ConsoleColor color;
+            if (isSelectedAsStart)
+                color = ConsoleColor.Green;
+            else if (isSelectedAsEnd)
+                color = ConsoleColor.Red;
+            else
+                color = ConsoleColor.Gray;
+            lines.Add(new Line("      ", new List<C>() { new C(color, 6) }));
+            lines.Add(new Line("  ♛   ", new List<C>() { new C(color, 6) }));
+            lines.Add(new Line("      ", new List<C>() { new C(color, 6) }));
             return lines;
         }
 
