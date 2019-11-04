@@ -13,7 +13,7 @@ namespace CheckersLogic
         //public List<Pawn> pawns = new List<Pawn>();
 
         private BrownSquare selectedSquareAsStart;
-        public List<BrownSquare> selectedSquaresToEnd { get; private set; } = new List<BrownSquare>();
+        public List<BrownSquare> selectedSquaresToEnd { get; set; } = new List<BrownSquare>();
         /// <summary>
         /// Indicates which (black or white) turn it is now
         /// </summary>
@@ -76,7 +76,7 @@ namespace CheckersLogic
         {
             if(pawn.IsWhite)
             {
-                if(pawn.Position.xIndex == squares.Length - 1)
+                if(pawn.Position.yIndex == 0)
                 {
                     if(pawn is ManPawn)
                     {
@@ -89,7 +89,7 @@ namespace CheckersLogic
             }
             else if(pawn.IsWhite == false)
             {
-                if (pawn.Position.xIndex == 0)
+                if (pawn.Position.yIndex == squares.Length - 1)
                 {
                     if (pawn is ManPawn)
                     {
@@ -180,20 +180,20 @@ namespace CheckersLogic
                 for (int i = 0; i < 12; i++)
                     whitePawns.Add(new ManPawn(true));
 
-                (squares[0][0] as BrownSquare).Pawn = whitePawns[0];
-                (squares[0][2] as BrownSquare).Pawn = whitePawns[1];
-                (squares[0][4] as BrownSquare).Pawn = whitePawns[2];
-                (squares[0][6] as BrownSquare).Pawn = whitePawns[3];
+                (squares[1][7] as BrownSquare).Pawn = whitePawns[0];
+                (squares[3][7] as BrownSquare).Pawn = whitePawns[1];
+                (squares[5][7] as BrownSquare).Pawn = whitePawns[2];
+                (squares[7][7] as BrownSquare).Pawn = whitePawns[3];
 
-                (squares[1][1] as BrownSquare).Pawn = whitePawns[4];
-                (squares[1][3] as BrownSquare).Pawn = whitePawns[5];
-                (squares[1][5] as BrownSquare).Pawn = whitePawns[6];
-                (squares[1][7] as BrownSquare).Pawn = whitePawns[7];
+                (squares[0][6] as BrownSquare).Pawn = whitePawns[4];
+                (squares[2][6] as BrownSquare).Pawn = whitePawns[5];
+                (squares[4][6] as BrownSquare).Pawn = whitePawns[6];
+                (squares[6][6] as BrownSquare).Pawn = whitePawns[7];
 
-                (squares[2][0] as BrownSquare).Pawn = whitePawns[8];
-                (squares[2][2] as BrownSquare).Pawn = whitePawns[9];
-                (squares[2][4] as BrownSquare).Pawn = whitePawns[10];
-                (squares[2][6] as BrownSquare).Pawn = whitePawns[11];
+                (squares[1][5] as BrownSquare).Pawn = whitePawns[8];
+                (squares[3][5] as BrownSquare).Pawn = whitePawns[9];
+                (squares[5][5] as BrownSquare).Pawn = whitePawns[10];
+                (squares[7][5] as BrownSquare).Pawn = whitePawns[11];
 
                 //pawns.AddRange(whitePawns);
             }
@@ -283,20 +283,20 @@ namespace CheckersLogic
                 for (int i = 0; i < 12; i++)
                     blackPawns.Add(new ManPawn(false));
 
-                (squares[7][1] as BrownSquare).Pawn = blackPawns[0];
-                (squares[7][3] as BrownSquare).Pawn = blackPawns[1];
-                (squares[7][5] as BrownSquare).Pawn = blackPawns[2];
-                (squares[7][7] as BrownSquare).Pawn = blackPawns[3];
+                (squares[0][0] as BrownSquare).Pawn = blackPawns[0];
+                (squares[2][0] as BrownSquare).Pawn = blackPawns[1];
+                (squares[4][0] as BrownSquare).Pawn = blackPawns[2];
+                (squares[6][0] as BrownSquare).Pawn = blackPawns[3];
 
-                (squares[6][0] as BrownSquare).Pawn = blackPawns[4];
-                (squares[6][2] as BrownSquare).Pawn = blackPawns[5];
-                (squares[6][4] as BrownSquare).Pawn = blackPawns[6];
-                (squares[6][6] as BrownSquare).Pawn = blackPawns[7];
+                (squares[1][1] as BrownSquare).Pawn = blackPawns[4];
+                (squares[3][1] as BrownSquare).Pawn = blackPawns[5];
+                (squares[5][1] as BrownSquare).Pawn = blackPawns[6];
+                (squares[7][1] as BrownSquare).Pawn = blackPawns[7];
 
-                (squares[5][1] as BrownSquare).Pawn = blackPawns[8];
-                (squares[5][3] as BrownSquare).Pawn = blackPawns[9];
-                (squares[5][5] as BrownSquare).Pawn = blackPawns[10];
-                (squares[5][7] as BrownSquare).Pawn = blackPawns[11];
+                (squares[0][2] as BrownSquare).Pawn = blackPawns[8];
+                (squares[2][2] as BrownSquare).Pawn = blackPawns[9];
+                (squares[4][2] as BrownSquare).Pawn = blackPawns[10];
+                (squares[6][2] as BrownSquare).Pawn = blackPawns[11];
 
                 //pawns.AddRange(blackPawns);
             }

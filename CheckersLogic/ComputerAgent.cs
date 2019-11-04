@@ -83,29 +83,28 @@ namespace CheckersLogic
                 {
                     possibleTakeDownPaths.Add(((BrownSquare)currentSituation[x + 2][y - 2], 3));
                 }
-                
 
             }
             else if(pawn is Dame)
             {
                 // Możliwe bicia
                 // oś NE
-                for (int i = 2; x + i <8 || y + i <8; i++)
+                for (int i = 2; x + i <8 && y + i <8; i++)
                 {
                     possibleTakeDownPaths.Add(((BrownSquare)currentSituation[x + i][y + i], 0));
                 }
                 // oś NW
-                for (int i = 2; x - i >= 0 || y + i < 8; i++)
+                for (int i = 2; x - i >= 0 && y + i < 8; i++)
                 {
                     possibleTakeDownPaths.Add(((BrownSquare)currentSituation[x - i][y + i], 1));
                 }
                 // oś SW
-                for (int i = 2; x - i >= 0 || y - i >= 0; i++)
+                for (int i = 2; x - i >= 0 && y - i >= 0; i++)
                 {
                     possibleTakeDownPaths.Add(((BrownSquare)currentSituation[x - i][y - i], 2));
                 }
                 // oś SE
-                for (int i = 2; x + i < 8 || y - i >= 0; i++)
+                for (int i = 2; x + i < 8 && y - i >= 0; i++)
                 {
                     possibleTakeDownPaths.Add(((BrownSquare)currentSituation[x + i][y - i], 3));
                 }
@@ -145,11 +144,14 @@ namespace CheckersLogic
                     if ((axis + 2) % 4 != directionAxis)
                     {
                         Evaluate(pawn, possibleTakeDownPaths[i].Item1, axis);
-
+                        if (bestOption.Count == 0)
+                        {
+                            bestOption.Add(option);
+                        }
                         if (option.Item2 > bestOption[0].Item2)
                         {
-                            bestOption = null;
-                            bestOption[0] = option;
+                            bestOption = new List<(Pawn, int, List<BrownSquare>)>();
+                            bestOption.Add(option);
                         }
                         if (option.Item2 == bestOption[0].Item2)
                         {
@@ -196,6 +198,10 @@ namespace CheckersLogic
                 option.Item3.Add((BrownSquare)pawn.Position);
                 Evaluate(pawn, (BrownSquare)pawn.Position, -1);
                 option = (null, 0, new List<BrownSquare>());
+            }
+            if (bestOption.Count == 0)
+            {
+                throw new Exception();
             }
             if(bestOption.Count == 1)
             {

@@ -40,11 +40,11 @@ namespace CheckersLogic
             int y = Position.yIndex;
             int xDistance = end.xIndex - x;
             int yDistance = end.yIndex - y;
-            if (Math.Abs(yDistance) == 1 && end.Pawn == null)
+            if (Math.Abs(xDistance) == 1 && end.Pawn == null)
             {
-                if (IsWhite && xDistance == 1)
+                if (IsWhite && yDistance == -1)
                     return true;
-                if (!IsWhite && xDistance == -1)
+                if (!IsWhite && yDistance == 1)
                     return true;
             }
             return false;
