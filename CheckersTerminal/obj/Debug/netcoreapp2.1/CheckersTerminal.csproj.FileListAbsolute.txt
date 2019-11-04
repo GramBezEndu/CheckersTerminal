@@ -1,0 +1,10 @@
+C:\Users\Jakub\Desktop\CheckersTerminal\CheckersTerminal\bin\Debug\netcoreapp2.1\CheckersTerminal.deps.json
+C:\Users\Jakub\Desktop\CheckersTerminal\CheckersTerminal\bin\Debug\netcoreapp2.1\CheckersTerminal.runtimeconfig.json
+C:\Users\Jakub\Desktop\CheckersTerminal\CheckersTerminal\bin\Debug\netcoreapp2.1\CheckersTerminal.runtimeconfig.dev.json
+C:\Users\Jakub\Desktop\CheckersTerminal\CheckersTerminal\bin\Debug\netcoreapp2.1\CheckersTerminal.dll
+C:\Users\Jakub\Desktop\CheckersTerminal\CheckersTerminal\bin\Debug\netcoreapp2.1\CheckersTerminal.pdb
+C:\Users\Jakub\Desktop\CheckersTerminal\CheckersTerminal\obj\Debug\netcoreapp2.1\CheckersTerminal.csprojAssemblyReference.cache
+C:\Users\Jakub\Desktop\CheckersTerminal\CheckersTerminal\obj\Debug\netcoreapp2.1\CheckersTerminal.AssemblyInfoInputs.cache
+C:\Users\Jakub\Desktop\CheckersTerminal\CheckersTerminal\obj\Debug\netcoreapp2.1\CheckersTerminal.AssemblyInfo.cs
+C:\Users\Jakub\Desktop\CheckersTerminal\CheckersTerminal\obj\Debug\netcoreapp2.1\CheckersTerminal.dll
+C:\Users\Jakub\Desktop\CheckersTerminal\CheckersTerminal\obj\Debug\netcoreapp2.1\CheckersTerminal.pdb
