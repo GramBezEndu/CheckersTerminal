@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace CheckersLogic
@@ -104,16 +105,21 @@ namespace CheckersLogic
 
         public bool AcceptMove()
         {
-
             bool correctMove = false;
+            //Debug.WriteLine(String.Format("Start {0} {1}", GetSelectedSquareAsStart().xIndex, GetSelectedSquareAsStart().yIndex));
+            //Debug.WriteLine(String.Format("End[0] {0} {1}", selectedSquaresToEnd[0].xIndex, selectedSquaresToEnd[0].yIndex));
             if (GetSelectedSquareAsStart() != null && selectedSquaresToEnd.Count > 0)
             {
                 correctMove = true;
                 //First case: accepting only one move
                 if (selectedSquaresToEnd.Count == 1)
                 {
-                    if(CanMovePawn(GetSelectedSquareAsStart(), selectedSquaresToEnd[0]))
+                    if (CanMovePawn(GetSelectedSquareAsStart(), selectedSquaresToEnd[0]))
+                    {
                         MovePawn(GetSelectedSquareAsStart(), selectedSquaresToEnd[0]);
+                    }
+                    else
+                        correctMove = false;
                 }
                 //More than 1 move in one turn -> every move HAS TO be a takedown
                 else
@@ -235,7 +241,10 @@ namespace CheckersLogic
                 SetSelectedSquareAsStart(square);
             else
             {
-                selectedSquaresToEnd.Add(square);
+                if (selectedSquaresToEnd.Contains(square) || GetSelectedSquareAsStart() == square)
+                    return;
+                else
+                    selectedSquaresToEnd.Add(square);
             }
         }
 

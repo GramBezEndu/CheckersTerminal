@@ -10,7 +10,7 @@ namespace CheckersLogic.States
         {
             new MenuOption("New Game VS PLAYER", new PlayerVsPlayer()),
             //TO DO: Change to PlayerVsComputer
-            new MenuOption("New Game VS COMPUTER", new PlayerVsPlayer())
+            new MenuOption("New Game VS COMPUTER", new PlayerVsComputer())
         };
 
     }
