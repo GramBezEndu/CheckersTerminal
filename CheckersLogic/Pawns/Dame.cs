@@ -38,7 +38,7 @@ namespace CheckersLogic
             return false;
         }
 
-        public override bool IsTakedownMove(BrownSquare end, Square[][] squares)
+        public override bool IsTakedownMove(BrownSquare end, Square[][] squares, Boolean shouldTakeDown)
         {
             int x = Position.xIndex;
             int y = Position.yIndex;
@@ -60,7 +60,8 @@ namespace CheckersLogic
                         {
                             if (i == absDistance - 1 && IsDifferentColor(target))
                             {
-                                TakedownList.Add(target);
+                                if (shouldTakeDown)
+                                    TakedownList.Add(target);
                                 return true;
                             }
                             return false;

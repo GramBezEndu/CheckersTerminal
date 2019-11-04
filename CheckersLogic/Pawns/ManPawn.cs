@@ -8,7 +8,7 @@ namespace CheckersLogic
     {
         public ManPawn(bool isWhite) : base(isWhite) { }
 
-        public override bool IsTakedownMove(BrownSquare end, Square[][] squares)
+        public override bool IsTakedownMove(BrownSquare end, Square[][] squares, Boolean shouldTakeDown)
         {
             int x = Position.xIndex;
             int y = Position.yIndex;
@@ -25,7 +25,8 @@ namespace CheckersLogic
                     {
                         if (IsDifferentColor(target))
                         {
-                            TakedownList.Add(target);
+                            if (shouldTakeDown)
+                                TakedownList.Add(target);
                             return true;
                         }
                     }

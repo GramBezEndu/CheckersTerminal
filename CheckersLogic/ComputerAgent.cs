@@ -134,7 +134,7 @@ namespace CheckersLogic
             // Rekurencyjnie sprawdzana możliwość bić
             for (int i=0; i<possibleTakeDownPaths.Count;i++)
             {
-                if(pawn.IsTakedownMove(possibleTakeDownPaths[i].Item1, currentSituation))
+                if(pawn.IsTakedownMove(possibleTakeDownPaths[i].Item1, currentSituation, false))
                 {
                     option.Item3.Add(possibleTakeDownPaths[i].Item1);
                     option.Item2 += 2;

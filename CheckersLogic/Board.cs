@@ -133,7 +133,7 @@ namespace CheckersLogic
                     BrownSquare toBeRemoved = firstSquare;
                     for(int i = 0;i<selectedSquaresToEnd.Count;i++)
                     {
-                        if(pawn.IsTakedownMove(selectedSquaresToEnd[i], squares))
+                        if(pawn.IsTakedownMove(selectedSquaresToEnd[i], squares, true))
                         {
                             //if (i == 0)
                             //    firstSquare.Pawn = null;
@@ -167,6 +167,7 @@ namespace CheckersLogic
                         Takedown(pawn.TakedownList);
                         pawn.TakedownList = new List<Pawn>();
                         ChangePawnToDame(pawn);
+                        CheckForGameEnd();
                     }
                     //Create another method Pawn.MoveIsTakeDown and iterate
                     //+ change every move start and end square
@@ -263,6 +264,7 @@ namespace CheckersLogic
             Takedown(pawn.TakedownList);
             pawn.TakedownList = new List<Pawn>();
             ChangePawnToDame(pawn);
+            CheckForGameEnd();
             return;
         }
 
@@ -320,6 +322,7 @@ namespace CheckersLogic
             //condition 1
             NoPawnsLeft();
             //condition 2 (no valid move possible)
+            DoHaveMove();
         }
 
         private void NoPawnsLeft()
@@ -349,6 +352,201 @@ namespace CheckersLogic
             else if (!foundWhitePawn)
             {
                 EndGame(false);
+            }
+        }
+
+        private void DoHaveMove()
+        {
+            int moves = 0;
+            if (IsWhiteTurn)
+            {
+                foreach (Square[] line in squares)
+                {
+                    foreach(Square square in line)
+                    {
+                        if (square is BrownSquare)
+                        {
+                            Pawn currentPawn = (square as BrownSquare).Pawn;
+                            if (currentPawn != null && currentPawn.IsWhite)
+                            {
+                                int x = square.xIndex;
+                                int y = square.yIndex;
+                                if (currentPawn is ManPawn)
+                                {
+                                    // Możliwe ruchy
+                                    if (x + 1 < 8 && y - 1 >= 0)
+                                    {
+                                        if (currentPawn.IsRegularMove((squares[x + 1][y - 1] as BrownSquare), squares))
+                                            moves++;
+                                    }
+                                    if (x - 1 >= 0 && y - 1 >= 0)
+                                    {
+                                        if (currentPawn.IsRegularMove((squares[x - 1][y - 1] as BrownSquare), squares))
+                                            moves++;
+                                    }
+
+
+
+                                    // Możliwe bicie
+
+                                    if (x + 2 < 8 && y + 2 < 8)
+                                    {
+                                        if (currentPawn.IsTakedownMove((squares[x + 2][y + 2] as BrownSquare), squares, false))
+                                            moves++;
+                                    }
+                                    if (x - 2 >= 0 && y + 2 < 8)
+                                    {
+                                        if (currentPawn.IsTakedownMove((squares[x - 2][y + 2] as BrownSquare), squares, false))
+                                            moves++;
+                                    }
+                                    if (x - 2 >= 0 && y - 2 >= 0)
+                                    {
+                                        if (currentPawn.IsTakedownMove((squares[x - 2][y - 2] as BrownSquare), squares, false))
+                                            moves++;
+                                    }
+                                    if (x + 2 < 8 && y - 2 >= 0)
+                                    {
+                                        if (currentPawn.IsTakedownMove((squares[x + 2][y - 2] as BrownSquare), squares, false))
+                                            moves++;
+                                    }
+                                }
+                                else
+                                {
+                                    for (int i = 1; x + i < 8 && y + i < 8; i++)
+                                    {
+                                        if (currentPawn.IsRegularMove((squares[x + i][y + i] as BrownSquare), squares))
+                                            moves++;
+                                        else if (currentPawn.IsTakedownMove((squares[x + i][y + i] as BrownSquare), squares, false))
+                                            moves++;
+                                    }
+                                    // oś NW
+                                    for (int i = 1; x - i >= 0 && y + i < 8; i++)
+                                    {
+                                        if (currentPawn.IsRegularMove((squares[x - i][y + i] as BrownSquare), squares))
+                                            moves++;
+                                        else if (currentPawn.IsTakedownMove((squares[x - i][y + i] as BrownSquare), squares, false))
+                                            moves++;
+                                    }
+                                    // oś SW
+                                    for (int i = 1; x - i >= 0 && y - i >= 0; i++)
+                                    {
+                                        if (currentPawn.IsRegularMove((squares[x - i][y - i] as BrownSquare), squares))
+                                            moves++;
+                                        else if (currentPawn.IsTakedownMove((squares[x - i][y - i] as BrownSquare), squares, false))
+                                            moves++;
+                                    }
+                                    // oś SE
+                                    for (int i = 1; x + i < 8 && y - i >= 0; i++)
+                                    {
+                                        if (currentPawn.IsRegularMove((squares[x + i][y - i] as BrownSquare), squares))
+                                            moves++;
+                                        else if (currentPawn.IsTakedownMove((squares[x + i][y - i] as BrownSquare), squares, false))
+                                            moves++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (moves == 0)
+                {
+                    EndGame(false);
+                }
+            }
+            else
+            {
+                foreach (Square[] line in squares)
+                {
+                    foreach (Square square in line)
+                    {
+                        if (square is BrownSquare)
+                        {
+                            Pawn currentPawn = (square as BrownSquare).Pawn;
+                            if (currentPawn != null && !currentPawn.IsWhite)
+                            {
+                                int x = square.xIndex;
+                                int y = square.yIndex;
+                                if (currentPawn is ManPawn)
+                                {
+                                    // Możliwe ruchy
+                                    if (x + 1 < 8 && y + 1 >= 0)
+                                    {
+                                        if (currentPawn.IsRegularMove((squares[x + 1][y + 1] as BrownSquare), squares))
+                                            moves++;
+                                    }
+                                    if (x - 1 >= 0 && y + 1 >= 0)
+                                    {
+                                        if (currentPawn.IsRegularMove((squares[x - 1][y + 1] as BrownSquare), squares))
+                                            moves++;
+                                    }
+
+
+
+                                    // Możliwe bicie
+
+                                    if (x + 2 < 8 && y + 2 < 8)
+                                    {
+                                        if (currentPawn.IsTakedownMove((squares[x + 2][y + 2] as BrownSquare), squares, false))
+                                            moves++;
+                                    }
+                                    if (x - 2 >= 0 && y + 2 < 8)
+                                    {
+                                        if (currentPawn.IsTakedownMove((squares[x - 2][y + 2] as BrownSquare), squares, false))
+                                            moves++;
+                                    }
+                                    if (x - 2 >= 0 && y - 2 >= 0)
+                                    {
+                                        if (currentPawn.IsTakedownMove((squares[x - 2][y - 2] as BrownSquare), squares, false))
+                                            moves++;
+                                    }
+                                    if (x + 2 < 8 && y - 2 >= 0)
+                                    {
+                                        if (currentPawn.IsTakedownMove((squares[x + 2][y - 2] as BrownSquare), squares, false))
+                                            moves++;
+                                    }
+                                }
+                                else
+                                {
+                                    for (int i = 1; x + i < 8 && y + i < 8; i++)
+                                    {
+                                        if (currentPawn.IsRegularMove((squares[x + i][y + i] as BrownSquare), squares))
+                                            moves++;
+                                        else if (currentPawn.IsTakedownMove((squares[x + i][y + i] as BrownSquare), squares, false))
+                                            moves++;
+                                    }
+                                    // oś NW
+                                    for (int i = 1; x - i >= 0 && y + i < 8; i++)
+                                    {
+                                        if (currentPawn.IsRegularMove((squares[x - i][y + i] as BrownSquare), squares))
+                                            moves++;
+                                        else if (currentPawn.IsTakedownMove((squares[x - i][y + i] as BrownSquare), squares, false))
+                                            moves++;
+                                    }
+                                    // oś SW
+                                    for (int i = 1; x - i >= 0 && y - i >= 0; i++)
+                                    {
+                                        if (currentPawn.IsRegularMove((squares[x - i][y - i] as BrownSquare), squares))
+                                            moves++;
+                                        else if (currentPawn.IsTakedownMove((squares[x - i][y - i] as BrownSquare), squares, false))
+                                            moves++;
+                                    }
+                                    // oś SE
+                                    for (int i = 1; x + i < 8 && y - i >= 0; i++)
+                                    {
+                                        if (currentPawn.IsRegularMove((squares[x + i][y - i] as BrownSquare), squares))
+                                            moves++;
+                                        else if (currentPawn.IsTakedownMove((squares[x + i][y - i] as BrownSquare), squares, false))
+                                            moves++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (moves == 0)
+                {
+                    EndGame(true);
+                }
             }
         }
 

@@ -34,11 +34,11 @@ namespace CheckersLogic
         {
             if (IsRegularMove(end, squares))
                 return true;
-            if (IsTakedownMove(end, squares))
+            if (IsTakedownMove(end, squares, true))
                 return true;
             return false;
         }
         public abstract bool IsRegularMove(BrownSquare end, Square[][] squares);
-        public abstract bool IsTakedownMove(BrownSquare end, Square[][] squares);
+        public abstract bool IsTakedownMove(BrownSquare end, Square[][] squares, Boolean shouldTakeDown);
     }
 }
