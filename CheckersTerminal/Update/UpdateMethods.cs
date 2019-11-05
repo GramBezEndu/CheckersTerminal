@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -19,31 +20,46 @@ namespace CheckersTerminal.Update
         /// <param name="s"></param>
         public static void Load(this State s)
         {
-            if (s is GameState)
+            if (s is PlayerVsPlayer)
             {
-                (s as GameState).Init();
+                (s as PlayerVsPlayer).Load();
+            }
+            else if (s is PlayerVsComputer)
+            {
+                (s as PlayerVsComputer).Load();
             }
             else if (s is MenuState)
-                (s as MenuState).Init();
+                (s as MenuState).Load();
         }
         
         public static void Unload(this State s)
         {
-            if (s is GameState)
+            if (s is PlayerVsPlayer)
             {
-                (s as GameState).Unload();
+                (s as PlayerVsPlayer).Unload();
+            }
+            else if (s is PlayerVsComputer)
+            {
+                (s as PlayerVsComputer).Unload();
             }
             else if (s is MenuState)
                 (s as MenuState).Unload();
         }
 
-        public static void Init(this GameState gameState)
+        public static void Load(this PlayerVsPlayer gameState)
         {
-            boardHandling = new ConsoleMouseEvent((r) => BoardMouseHandling(gameState.board, r, 0, 2));
+            boardHandling = new ConsoleMouseEvent((r) => BoardMouseHandling(gameState.board, r, 3, 2));
             ConsoleListener.MouseEvent += boardHandling;
-            gameState.board.WrongMove += PlayWrongMoveSound;
+            gameState.board.OnWrongMove += PlayWrongMoveSound;
             StartBackgroundSong();
-            //ConsoleListener.MouseEvent += (r) => BoardMouseHandling(gameState.board, r, 0, 2);
+        }
+
+        public static void Load(this PlayerVsComputer gameState)
+        {
+            boardHandling = new ConsoleMouseEvent((r) => ComputerBoardMouseHandling(gameState.board, r, 3, 2));
+            ConsoleListener.MouseEvent += boardHandling;
+            gameState.board.OnWrongMove += PlayWrongMoveSound;
+            StartBackgroundSong();
         }
 
         private static void StartBackgroundSong()
@@ -84,7 +100,7 @@ namespace CheckersTerminal.Update
             }).Start();
         }
 
-        public static void Init(this MenuState menuState)
+        public static void Load(this MenuState menuState)
         {
             ConsoleListener.MouseEvent += MenuHandling;
             StartMainMenuSong();
@@ -109,10 +125,15 @@ namespace CheckersTerminal.Update
             }).Start();
         }
 
-        public static void Unload(this GameState gameState)
+        public static void Unload(this PlayerVsPlayer gameState)
         {
             //ConsoleListener.MouseEvent -= (r) => BoardMouseHandling(gameState.board, r, 0, 2);
             ConsoleListener.MouseEvent -= boardHandling;
+        }
+
+        public static void Unload(this PlayerVsComputer playerVsComputer)
+        {
+            ConsoleListener.MouseEvent -= boardHandling; 
         }
 
         public static void Unload(this MenuState menuState)
@@ -138,24 +159,29 @@ namespace CheckersTerminal.Update
 
         private static void BoardMouseHandling(Board board, NativeMethods.MOUSE_EVENT_RECORD r, int startIndexX, int startIndexY)
         {
-            //GCHandle gch = GCHandle.Alloc(board, GCHandleType.Pinned);
-            //IntPtr pObj = gch.AddrOfPinnedObject();
-            //Debug.WriteLine("Update: " + pObj.ToString());
-            //Check for mouse input (hard coded texture width and height)
+            MoveMouseHandling(board, r, startIndexX, startIndexY);
+        }
+
+        private static void MoveMouseHandling(Board board, NativeMethods.MOUSE_EVENT_RECORD r, int startIndexX, int startIndexY)
+        {
+            Debug.WriteLine("R: " + r.dwMousePosition.X + " " + r.dwMousePosition.Y);
             if (r.dwButtonState == NativeMethods.MOUSE_EVENT_RECORD.FROM_LEFT_1ST_BUTTON_PRESSED)
             {
                 for (int i = 0; i < board.squares.Length; i++)
                 {
                     for (int j = 0; j < board.squares[i].Length; j++)
                     {
-                        if (r.dwMousePosition.X >= (startIndexX + j * 6) && r.dwMousePosition.X <= (startIndexX + j * 6) + 6
-                            && r.dwMousePosition.Y >= (startIndexY + i * 3) && r.dwMousePosition.Y <= (startIndexX + i * 3) + 3)
+                        //if (r.dwMousePosition.X >= (startIndexX + j * 6) && r.dwMousePosition.X <= (startIndexX + j * 6) + 6
+                        //&& r.dwMousePosition.Y >= (startIndexY + i * 3) && r.dwMousePosition.Y <= (startIndexY + i * 3) + 3)
+                        if (r.dwMousePosition.X >= (startIndexX + j * 6) && r.dwMousePosition.X < (startIndexX + j * 6) + 6
+                        && r.dwMousePosition.Y >= (startIndexY + i * 3) && r.dwMousePosition.Y < (startIndexY + i * 3) + 3)
                         {
                             if (r.dwButtonState == NativeMethods.MOUSE_EVENT_RECORD.FROM_LEFT_1ST_BUTTON_PRESSED)
                             {
                                 if (board.squares[j][i] is BrownSquare)
                                 {
                                     board.OnInteraction(board.squares[j][i] as BrownSquare);
+                                    Debug.WriteLine("j: " + j + " i: " + i);
                                     Program.NeedToRedraw = true;
                                 }
                                 return;
@@ -163,77 +189,58 @@ namespace CheckersTerminal.Update
                         }
                     }
                 }
-                //Debug.WriteLine(r.dwMousePosition.X + " " + r.dwMousePosition.Y);
-                if (r.dwMousePosition.X >= 0 && r.dwMousePosition.X <= (0 + 10) && r.dwMousePosition.Y == 26
+                if (r.dwMousePosition.X >= 0 && r.dwMousePosition.X < (0 + 20) && r.dwMousePosition.Y >= 26 && r.dwMousePosition.Y < 31
                     && r.dwButtonState == NativeMethods.MOUSE_EVENT_RECORD.FROM_LEFT_1ST_BUTTON_PRESSED)
                 {
-                    /*if (*/
-                    board.AcceptMove();/* == false)*/
-                    //{
-                    //    throw new Exception("xx");
-                    //}
+                    board.AcceptMove();
                     Program.NeedToRedraw = true;
                 }
-                else if (r.dwMousePosition.X >= 38 && r.dwMousePosition.X <= (38 + 9) && r.dwMousePosition.Y == 26
+                else if (r.dwMousePosition.X >= 21 && r.dwMousePosition.X < (21 + 20) && r.dwMousePosition.Y >= 26 && r.dwMousePosition.Y < 31
                     && r.dwButtonState == NativeMethods.MOUSE_EVENT_RECORD.FROM_LEFT_1ST_BUTTON_PRESSED)
                 {
                     board.ResetMove();
                     Program.NeedToRedraw = true;
                 }
+                else if (r.dwMousePosition.X >= 39 && r.dwMousePosition.X < (39 + 20) && r.dwMousePosition.Y >= 26 && r.dwMousePosition.Y < 31
+                    && r.dwButtonState == NativeMethods.MOUSE_EVENT_RECORD.FROM_LEFT_1ST_BUTTON_PRESSED)
+                {
+                    Program.ChangeState(new MenuState());
+                    Program.NeedToRedraw = true;
+                }
             }
         }
 
-        public static void Update(this MenuState menuState)
+        private static void ComputerBoardMouseHandling(Board board, NativeMethods.MOUSE_EVENT_RECORD r, int startIndexX, int startIndexY)
         {
-            //ConsoleKeyInfo c = Console.ReadKey();
-            ////Arrow down
-            //if (c.Key == ConsoleKey.DownArrow)
-            //{
-            //    if (menuState.index == menuState.options.Count - 1)
-            //    {
-            //        menuState.index = 0;
-            //    }
-            //    else { menuState.index++; }
-            //    Program.NeedToRedraw = true;
-            //}
-            ////Arrow up
-            //else if (c.Key == ConsoleKey.UpArrow)
-            //{
-            //    if (menuState.index <= 0)
-            //    {
-            //        menuState.index = menuState.options.Count - 1;
-            //    }
-            //    else { menuState.index--; }
-            //    Program.NeedToRedraw = true;
-            //}
-            ////Enter
-            //else if (c.Key == ConsoleKey.Enter)
-            //{
-            //    Program.ChangeState(menuState.options[menuState.index].OptionState);
-            //    Program.NeedToRedraw = true;
-            //}
+            if(board.IsWhiteTurn)
+            {
+                MoveMouseHandling(board, r, startIndexX, startIndexY);
+            }
+            else
+            {
+                System.Threading.Thread.Sleep(500);
+                //Ruch komputera
+                RandomComputerAgent agent = new RandomComputerAgent(board);
+                // Wyszukanie najlepszego rozwiązania
+                (Pawn, List<BrownSquare>) move = agent.SearchForBestMove();
+                board.SetSelectedSquareAsStart((BrownSquare)move.Item1.Position);
+                board.selectedSquaresToEnd = move.Item2;
+
+                board.AcceptMove();
+                Program.NeedToRedraw = true;
+            }
         }
 
         public static void Update(this State State)
         {
-            if(State is MenuState)
+            if(State is GameState)
             {
-                (State as MenuState).Update();
+                if((State as GameState).board.GameFinished)
+                {
+                    Program.ChangeState(new EndGame((State as GameState).board.WhiteWon));
+                    Program.NeedToRedraw = true;
+                }
             }
-            if (State is GameState)
-            {
-                (State as GameState).Update();
-            }
-        }
-
-        public static void Update(this GameState pvp)
-        {
-            //ConsoleKeyInfo c = Console.ReadKey();
-            ////A
-            //if (c.Key == ConsoleKey.A)
-            //    pvp.board.AcceptMove();
-            //else if (c.Key == ConsoleKey.R)
-            //    pvp.board.ResetMove();
         }
     }
 }

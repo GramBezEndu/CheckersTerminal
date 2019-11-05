@@ -22,7 +22,7 @@ namespace CheckersTerminal
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 //TO DO: ustawić na odpowiednią wartość
-                Console.SetWindowSize(70, 31);
+                Console.SetWindowSize(70, 32);
             }
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             Console.CursorVisible = false;
@@ -59,7 +59,8 @@ namespace CheckersTerminal
                     nextState = null;
                 }
                 currentState.Update();
-                currentState.Draw();
+                if(NeedToRedraw)
+                    currentState.Draw();
             }
         }
 
