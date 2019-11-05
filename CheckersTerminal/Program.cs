@@ -12,7 +12,7 @@ namespace CheckersTerminal
 {
     class Program
     {
-        static State currentState;
+        public static State currentState { get; private set; }
         public static bool NeedToRedraw = true;
         static State nextState;
         public static ConsoleColor foreground;
