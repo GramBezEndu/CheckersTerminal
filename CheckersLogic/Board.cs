@@ -187,7 +187,7 @@ namespace CheckersLogic
         {
             if(blackPawnsAtBeginningOnBottom)
             {
-                var whitePawns = new List<ManPawn>();
+                var whitePawns = new List<Pawn>();
                 for (int i = 0; i < 12; i++)
                     whitePawns.Add(new ManPawn(true));
 
@@ -294,7 +294,7 @@ namespace CheckersLogic
         {
             if(blackPawnsAtBeginningOnBottom)
             {
-                var blackPawns = new List<ManPawn>();
+                var blackPawns = new List<Pawn>();
                 for (int i = 0; i < 12; i++)
                     blackPawns.Add(new ManPawn(false));
 

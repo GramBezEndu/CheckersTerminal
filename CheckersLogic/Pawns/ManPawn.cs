@@ -36,6 +36,8 @@ namespace CheckersLogic
                         {
                             if (shouldTakeDown)
                                 TakedownList.Add(target);
+                            if (beg != null)
+                                (squares[x + xDistance / 2][y + yDistance / 2] as BrownSquare).Pawn = null;
                             return true;
                         }
                     }

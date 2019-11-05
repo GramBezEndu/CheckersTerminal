@@ -65,12 +65,14 @@ namespace CheckersLogic
                     for (int i = 1; i < absDistance; i++)
                     {
                         Pawn target = (squares[x + xDistance / absDistance * i][y + yDistance / absDistance * i] as BrownSquare).Pawn;
-                        if (target != null)
+                        if (target != null && !takedownList.Contains(target))
                         {
                             if (i == absDistance - 1 && IsDifferentColor(target))
                             {
                                 if (shouldTakeDown)
                                     TakedownList.Add(target);
+                                if (beg != null)
+                                    (squares[x + xDistance / absDistance * i][y + yDistance / absDistance * i] as BrownSquare).Pawn = null;
                                 return true;
                             }
                             return false;
