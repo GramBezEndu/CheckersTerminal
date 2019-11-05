@@ -4,11 +4,13 @@ using System.Runtime.InteropServices;
 using CheckersLogic;
 using CheckersLogic.States;
 using CheckersTerminal;
+using static CheckersTerminal.ConsoleListener;
 
 namespace CheckersTerminal.Update
 {
     public static class UpdateMethods
     {
+        public static ConsoleMouseEvent boardHandling;
         /// <summary>
         /// Add mouse events
         /// </summary>
@@ -35,22 +37,25 @@ namespace CheckersTerminal.Update
 
         public static void Init(this GameState gameState)
         {
-            ConsoleListener.MouseEvent += (r) => BoardMouseHandling(gameState.board, r, 0, 2);
+            boardHandling = new ConsoleMouseEvent((r) => BoardMouseHandling(gameState.board, r, 0, 2));
+            ConsoleListener.MouseEvent += boardHandling;
+            //ConsoleListener.MouseEvent += (r) => BoardMouseHandling(gameState.board, r, 0, 2);
         }
 
         public static void Init(this MenuState menuState)
         {
-            ConsoleListener.MouseEvent += (r) => MenuHandling(r);
+            ConsoleListener.MouseEvent += MenuHandling;
         }
 
         public static void Unload(this GameState gameState)
         {
-            ConsoleListener.MouseEvent -= (r) => BoardMouseHandling(gameState.board, r, 0, 2);
+            //ConsoleListener.MouseEvent -= (r) => BoardMouseHandling(gameState.board, r, 0, 2);
+            ConsoleListener.MouseEvent -= boardHandling;
         }
 
         public static void Unload(this MenuState menuState)
         {
-            ConsoleListener.MouseEvent -= (r) => MenuHandling(r);
+            ConsoleListener.MouseEvent -= MenuHandling;
         }
 
         private static void MenuHandling(NativeMethods.MOUSE_EVENT_RECORD r)
