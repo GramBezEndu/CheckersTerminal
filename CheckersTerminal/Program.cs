@@ -57,6 +57,7 @@ namespace CheckersTerminal
                     currentState = nextState;
                     currentState.Load();
                     nextState = null;
+                    NeedToRedraw = true;
                 }
                 currentState.Update();
                 if(NeedToRedraw)

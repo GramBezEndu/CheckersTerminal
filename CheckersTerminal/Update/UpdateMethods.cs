@@ -72,7 +72,7 @@ namespace CheckersTerminal.Update
                     {
                         outputDevice.Init(audioFile);
                         outputDevice.Play();
-                        while (outputDevice.PlaybackState == PlaybackState.Playing)
+                        while (outputDevice.PlaybackState == PlaybackState.Playing && Program.currentState is GameState)
                         {
                             Thread.Sleep(50);
                         }

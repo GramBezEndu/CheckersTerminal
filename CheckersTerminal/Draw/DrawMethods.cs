@@ -72,10 +72,12 @@ namespace CheckersTerminal.Draw
             {
                 (State as MenuState).Draw();
             }
-            else if(State is GameState)
+            else if (State is GameState)
             {
                 (State as GameState).Draw();
             }
+            else if (State is EndGame)
+                (State as EndGame).Draw();
         }
         public static void Draw(this GameState state)
         {
@@ -123,7 +125,44 @@ namespace CheckersTerminal.Draw
 
         public static void Draw(this EndGame endGame)
         {
+            string whiteWon =
+"      ██╗    ██╗██╗  ██╗██╗████████╗███████╗\n" +
+"      ██║    ██║██║  ██║██║╚══██╔══╝██╔════╝\n" +
+"      ██║ █╗ ██║███████║██║   ██║   █████╗  \n" +
+"      ██║███╗██║██╔══██║██║   ██║   ██╔══╝  \n" +
+"      ╚███╔███╔╝██║  ██║██║   ██║   ███████╗\n" +
+"       ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝   ╚═╝   ╚══════╝\n" +
+"          ██╗    ██╗ ██████╗ ███╗   ██╗\n" +
+"          ██║    ██║██╔═══██╗████╗  ██║\n" +
+"          ██║ █╗ ██║██║   ██║██╔██╗ ██║\n" +
+"          ██║███╗██║██║   ██║██║╚██╗██║\n" +
+"          ╚███╔███╔╝╚██████╔╝██║ ╚████║\n" +
+"           ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═══╝\n";
+            string blackWon =
+"      ██████╗ ██╗      █████╗  ██████╗██╗  ██╗\n" +
+"      ██╔══██╗██║     ██╔══██╗██╔════╝██║ ██╔╝\n" +
+"      ██████╔╝██║     ███████║██║     █████╔╝ \n" +
+"      ██╔══██╗██║     ██╔══██║██║     ██╔═██╗ \n" +
+"      ██████╔╝███████╗██║  ██║╚██████╗██║  ██╗\n" +
+"      ╚═════╝ ╚══════╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝\n" +
+"          ██╗    ██╗ ██████╗ ███╗   ██╗\n" +
+"          ██║    ██║██╔═══██╗████╗  ██║\n" +
+"          ██║ █╗ ██║██║   ██║██╔██╗ ██║\n" +
+"          ██║███╗██║██║   ██║██║╚██╗██║\n" +
+"          ╚███╔███╔╝╚██████╔╝██║ ╚████║\n" +
+"           ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═══╝\n";
             Console.Clear();
+            for (int i = 0; i < 5; i++)
+                Console.WriteLine();
+            if(endGame.WhiteWon)
+            {
+                Console.WriteLine(whiteWon);
+            }
+            else
+            {
+                Console.WriteLine(blackWon);
+            }
+            Program.NeedToRedraw = false;
         }
 
         public static void Draw(this Board board)

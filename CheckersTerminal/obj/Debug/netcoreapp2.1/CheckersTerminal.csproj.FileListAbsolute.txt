@@ -8,3 +8,4 @@ C:\Users\Jakub\Desktop\CheckersTerminal\CheckersTerminal\obj\Debug\netcoreapp2.1
 C:\Users\Jakub\Desktop\CheckersTerminal\CheckersTerminal\obj\Debug\netcoreapp2.1\CheckersTerminal.AssemblyInfo.cs
 C:\Users\Jakub\Desktop\CheckersTerminal\CheckersTerminal\obj\Debug\netcoreapp2.1\CheckersTerminal.dll
 C:\Users\Jakub\Desktop\CheckersTerminal\CheckersTerminal\obj\Debug\netcoreapp2.1\CheckersTerminal.pdb
+C:\Users\Jakub\Desktop\CheckersTerminal\CheckersTerminal\obj\Debug\netcoreapp2.1\CheckersTerminal.csproj.CoreCompileInputs.cache
