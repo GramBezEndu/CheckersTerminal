@@ -39,6 +39,6 @@ namespace CheckersLogic
             return false;
         }
         public abstract bool IsRegularMove(BrownSquare end, Square[][] squares);
-        public abstract bool IsTakedownMove(BrownSquare end, Square[][] squares, Boolean shouldTakeDown);
+        public abstract bool IsTakedownMove(BrownSquare end, Square[][] squares, Boolean shouldTakeDown, BrownSquare beg = null);
     }
 }
