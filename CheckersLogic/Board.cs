@@ -49,6 +49,7 @@ namespace CheckersLogic
         private const string blackTurnText = "BLACK TURN";
         private const string whiteTurnText = "WHITE TURN";
 
+        public EventHandler WrongMove;
         private const string notValidMoveText = "NOT VALID MOVE";
         /// <summary>
         /// Indicates who won game (black or white)
@@ -173,6 +174,9 @@ namespace CheckersLogic
                     //+ change every move start and end square
                 }
             }
+            //Call any events (eg. play sound) on wrong move
+            if(correctMove == false)
+                WrongMove?.Invoke(this, new EventArgs());
             //Reset selected squares no matter the result
             SetSelectedSquareAsStart(null);
             selectedSquaresToEnd = new List<BrownSquare>();

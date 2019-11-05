@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Threading;
 using CheckersLogic;
 using CheckersLogic.States;
 using CheckersTerminal;
+using NAudio.Wave;
+using static CheckersTerminal.ConsoleListener;
 
 namespace CheckersTerminal.Update
 {
     public static class UpdateMethods
     {
+        public static ConsoleMouseEvent boardHandling;
         /// <summary>
         /// Add mouse events
         /// </summary>
@@ -35,22 +39,85 @@ namespace CheckersTerminal.Update
 
         public static void Init(this GameState gameState)
         {
-            ConsoleListener.MouseEvent += (r) => BoardMouseHandling(gameState.board, r, 0, 2);
+            boardHandling = new ConsoleMouseEvent((r) => BoardMouseHandling(gameState.board, r, 0, 2));
+            ConsoleListener.MouseEvent += boardHandling;
+            gameState.board.WrongMove += PlayWrongMoveSound;
+            StartBackgroundSong();
+            //ConsoleListener.MouseEvent += (r) => BoardMouseHandling(gameState.board, r, 0, 2);
+        }
+
+        private static void StartBackgroundSong()
+        {
+            new Thread(() =>
+            {
+                using (var audioFile = new AudioFileReader(System.AppDomain.CurrentDomain.BaseDirectory + "PlayTheme.wav"))
+                {
+                    using (var outputDevice = new WaveOutEvent())
+                    {
+                        outputDevice.Init(audioFile);
+                        outputDevice.Play();
+                        while (outputDevice.PlaybackState == PlaybackState.Playing)
+                        {
+                            Thread.Sleep(50);
+                        }
+                    }
+                }
+            }).Start();
+        }
+
+        private static void PlayWrongMoveSound(object sender, EventArgs e)
+        {
+            new Thread(() =>
+            {
+                using (var audioFile = new AudioFileReader(System.AppDomain.CurrentDomain.BaseDirectory + "WrongMove.wav"))
+                {
+                    using (var outputDevice = new WaveOutEvent())
+                    {
+                        outputDevice.Init(audioFile);
+                        outputDevice.Play();
+                        while (outputDevice.PlaybackState == PlaybackState.Playing && Program.currentState is GameState)
+                        {
+                            Thread.Sleep(50);
+                        }
+                    }
+                }
+            }).Start();
         }
 
         public static void Init(this MenuState menuState)
         {
-            ConsoleListener.MouseEvent += (r) => MenuHandling(r);
+            ConsoleListener.MouseEvent += MenuHandling;
+            StartMainMenuSong();
+        }
+
+        private static void StartMainMenuSong()
+        {
+            new Thread(() =>
+            {
+                using (var audioFile = new AudioFileReader(System.AppDomain.CurrentDomain.BaseDirectory + "MainMenu.wav"))
+                {
+                    using (var outputDevice = new WaveOutEvent())
+                    {
+                        outputDevice.Init(audioFile);
+                        outputDevice.Play();
+                        while (outputDevice.PlaybackState == PlaybackState.Playing && Program.currentState is MenuState)
+                        {
+                            Thread.Sleep(50);
+                        }
+                    }
+                }
+            }).Start();
         }
 
         public static void Unload(this GameState gameState)
         {
-            ConsoleListener.MouseEvent -= (r) => BoardMouseHandling(gameState.board, r, 0, 2);
+            //ConsoleListener.MouseEvent -= (r) => BoardMouseHandling(gameState.board, r, 0, 2);
+            ConsoleListener.MouseEvent -= boardHandling;
         }
 
         public static void Unload(this MenuState menuState)
         {
-            ConsoleListener.MouseEvent -= (r) => MenuHandling(r);
+            ConsoleListener.MouseEvent -= MenuHandling;
         }
 
         private static void MenuHandling(NativeMethods.MOUSE_EVENT_RECORD r)
@@ -86,9 +153,9 @@ namespace CheckersTerminal.Update
                         {
                             if (r.dwButtonState == NativeMethods.MOUSE_EVENT_RECORD.FROM_LEFT_1ST_BUTTON_PRESSED)
                             {
-                                if (board.squares[i][j] is BrownSquare)
+                                if (board.squares[j][i] is BrownSquare)
                                 {
-                                    board.OnInteraction(board.squares[i][j] as BrownSquare);
+                                    board.OnInteraction(board.squares[j][i] as BrownSquare);
                                     Program.NeedToRedraw = true;
                                 }
                                 return;
