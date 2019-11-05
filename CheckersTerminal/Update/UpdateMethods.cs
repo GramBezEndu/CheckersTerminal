@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Threading;
 using CheckersLogic;
 using CheckersLogic.States;
 using CheckersTerminal;
+using NAudio.Wave;
 using static CheckersTerminal.ConsoleListener;
 
 namespace CheckersTerminal.Update
@@ -39,7 +41,27 @@ namespace CheckersTerminal.Update
         {
             boardHandling = new ConsoleMouseEvent((r) => BoardMouseHandling(gameState.board, r, 0, 2));
             ConsoleListener.MouseEvent += boardHandling;
+            gameState.board.WrongMove += PlayWrongMoveSound;
             //ConsoleListener.MouseEvent += (r) => BoardMouseHandling(gameState.board, r, 0, 2);
+        }
+
+        private static void PlayWrongMoveSound(object sender, EventArgs e)
+        {
+            new Thread(() =>
+            {
+                using (var audioFile = new AudioFileReader(System.AppDomain.CurrentDomain.BaseDirectory + "WrongMove.wav"))
+                {
+                    using (var outputDevice = new WaveOutEvent())
+                    {
+                        outputDevice.Init(audioFile);
+                        outputDevice.Play();
+                        while (outputDevice.PlaybackState == PlaybackState.Playing)
+                        {
+                            Thread.Sleep(50);
+                        }
+                    }
+                }
+            }).Start();
         }
 
         public static void Init(this MenuState menuState)
