@@ -134,10 +134,14 @@ namespace CheckersLogic
             // Rekurencyjnie sprawdzana możliwość bić
             for (int i=0; i<possibleTakeDownPaths.Count;i++)
             {
-                if(pawn.IsTakedownMove(possibleTakeDownPaths[i].Item1, currentSituation, false))
+                if(pawn.IsTakedownMove(possibleTakeDownPaths[i].Item1, currentSituation, false, option.Item3[option.Item3.Count - 1]))
                 {
                     option.Item3.Add(possibleTakeDownPaths[i].Item1);
                     option.Item2 += 2;
+                    (Pawn, int, List<BrownSquare>) currentOption = option;
+                    currentOption.Item3 = new List<BrownSquare>();
+                    currentOption.Item3.AddRange(option.Item3);
+                    currentOption.Item3.RemoveAt(0);
                     int axis = possibleTakeDownPaths[i].Item2;
 
                     // by uniknąć zapętlenia nie sprawdzamy ścieżki, z której przybył pionek
@@ -146,19 +150,19 @@ namespace CheckersLogic
                         Evaluate(pawn, possibleTakeDownPaths[i].Item1, axis);
                         if (bestOption.Count == 0)
                         {
-                            bestOption.Add(option);
+                            bestOption.Add(currentOption);
                         }
-                        if (option.Item2 > bestOption[0].Item2)
+                        else if (currentOption.Item2 > bestOption[0].Item2)
                         {
                             bestOption = new List<(Pawn, int, List<BrownSquare>)>();
-                            bestOption.Add(option);
+                            bestOption.Add(currentOption);
                         }
-                        if (option.Item2 == bestOption[0].Item2)
+                        else if (currentOption.Item2 == bestOption[0].Item2)
                         {
-                            bestOption.Add(option);
+                            bestOption.Add(currentOption);
                         }
                         option.Item2 -= 2;
-                        option.Item3.RemoveAt(0);
+                        option.Item3.RemoveAt(option.Item3.Count - 1);
                     }
                 }
             }
@@ -168,24 +172,28 @@ namespace CheckersLogic
                 {
                     option.Item3.Add(move.Item1);
                     option.Item2 += 1;
+                    (Pawn, int, List<BrownSquare>) currentOption = option;
+                    currentOption.Item3 = new List<BrownSquare>();
+                    currentOption.Item3.AddRange(option.Item3);
+                    currentOption.Item3.RemoveAt(0);
                     //jeżeli nie ma jeszcze żadnej najlepszej opcji to opcja jest najlepszą
-                    if(bestOption.Count == 0)
+                    if (bestOption.Count == 0)
                     {
-                        bestOption.Add(option);
+                        bestOption.Add(currentOption);
                     }
                     //obecna opcja jest lepsza niż najlepsza opcja
-                    else if (option.Item2 > bestOption[0].Item2)
+                    else if (currentOption.Item2 > bestOption[0].Item2)
                     {
                         bestOption = new List<(Pawn, int, List<BrownSquare>)>();
-                        bestOption.Add(option);
+                        bestOption.Add(currentOption);
                     }
                     //obecna opcja jest tak samo dobra jak najlepsza opcja, dodawana jest do puli
-                    if (option.Item2 == bestOption[0].Item2)
+                    else if (currentOption.Item2 == bestOption[0].Item2)
                     {
-                        bestOption.Add(option);
+                        bestOption.Add(currentOption);
                     }
                     option.Item2 -= 1;
-                    option.Item3.RemoveAt(0);
+                    option.Item3.RemoveAt(option.Item3.Count - 1);
                 }
             }
         }

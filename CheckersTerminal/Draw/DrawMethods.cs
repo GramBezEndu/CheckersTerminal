@@ -22,27 +22,11 @@ namespace CheckersTerminal.Draw
             " ╚═════╝╚═╝  ╚═╝╚══════╝ ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝\n" +
             "\n";
 
-            //string terminal_title =
-            //" ▄████▄   ██░ ██ ▓█████  ▄████▄   ██ ▄█▀▓█████  ██▀███    ██████ \n" +
-            //"▒██▀ ▀█  ▓██░ ██▒▓█   ▀ ▒██▀ ▀█   ██▄█▒ ▓█   ▀ ▓██ ▒ ██▒▒██    ▒ \n" +
-            //"▒▓█    ▄ ▒██▀▀██░▒███   ▒▓█    ▄ ▓███▄░ ▒███   ▓██ ░▄█ ▒░ ▓██▄   \n" +
-            //"▒▓▓▄ ▄██▒░▓█ ░██ ▒▓█  ▄ ▒▓▓▄ ▄██▒▓██ █▄ ▒▓█  ▄ ▒██▀▀█▄    ▒   ██▒\n" +
-            //"▒ ▓███▀ ░░▓█▒░██▓░▒████▒▒ ▓███▀ ░▒██▒ █▄░▒████▒░██▓ ▒██▒▒██████▒▒\n" +
-            //"░ ░▒ ▒  ░ ▒ ░░▒░▒░░ ▒░ ░░ ░▒ ▒  ░▒ ▒▒ ▓▒░░ ▒░ ░░ ▒▓ ░▒▓░▒ ▒▓▒ ▒ ░\n" +
-            //"  ░  ▒    ▒ ░▒░ ░ ░ ░  ░  ░  ▒   ░ ░▒ ▒░ ░ ░  ░  ░▒ ░ ▒░░ ░▒  ░ ░\n" +
-            //"░         ░  ░░ ░   ░   ░        ░ ░░ ░    ░     ░░   ░ ░  ░  ░  \n" +
-            //"░ ░       ░  ░  ░   ░  ░░ ░      ░  ░      ░  ░   ░           ░  \n" +
-            //"░                       ░                                        \n";
-
-
             string credits = "By Paweł Bąk, Wojciech Mojsiejuk, Jakub Mroczkowski\n";
 
             //Rysowanie menu
-            if(Program.NeedToRedraw)
-            {
-                DrawMenu(menuState, terminal_title, credits);
-                Program.NeedToRedraw = false;
-            }
+            DrawMenu(menuState, terminal_title, credits);
+            Program.NeedToRedraw = false;
         }
 
         private static void DrawMenu(MenuState menuState, string terminal_title, string credits)
@@ -95,43 +79,74 @@ namespace CheckersTerminal.Draw
         }
         public static void Draw(this GameState state)
         {
-            if(Program.NeedToRedraw)
-            {
-                Console.Clear();
-                Console.WriteLine(state.GetType().Name);
-                Console.WriteLine(state.board.TurnMessage);
-                state.board.Draw();
-                Console.Write("Accept move");
-                for(int i=0;i<27;i++)
-                    Console.Write(' ');
-                Console.WriteLine("Reset move");
-                Program.NeedToRedraw = false;
-            }
+            Console.Clear();
+            //draw board etc.
+            Console.WriteLine(state.GetType().Name);
+            Console.WriteLine(state.board.TurnMessage);
+            state.board.Draw();
+            state.DrawButtons();
+            Program.NeedToRedraw = false;
+        }
+
+        private static void DrawButtons(this GameState gameState)
+        {
+            string buttons =
+".------------------. .---------------. .-------------.\n" +
+"|╔═╗╔═╗╔═╗╔═╗╔═╗╔╦╗| |╦═╗╔═╗╔═╗╔═╗╔╦╗| |╔╗ ╔═╗╔═╗╦╔═ |\n" +
+"|╠═╣║  ║  ║╣ ╠═╝ ║ | |╠╦╝║╣ ╚═╗║╣  ║ | |╠╩╗╠═╣║  ╠╩╗ |\n" +
+"|╩ ╩╚═╝╚═╝╚═╝╩   ╩ | |╩╚═╚═╝╚═╝╚═╝ ╩ | |╚═╝╩ ╩╚═╝╩ ╩ |\n" +
+"'------------------' '---------------' '-------------'\n";
+
+            /*
+            string buttons =
+                " __________________\n" +
+                "|   ┌┐ ┌─┐┌─┐┬┌─   |\n"+
+                "|   ├┴┐├─┤│  ├┴┐   |\n"+
+                "|   └─┘┴ ┴└─┘┴ ┴   |\n"+
+                "'------------------'\n";
+            string accept =
+                " __________________\n" +
+                "|┌─┐┌─┐┌─┐┌─┐┌─┐┌┬┐|\n" +
+                "|├─┤│  │  ├┤ ├─┘ │ |\n" +
+                "|┴ ┴└─┘└─┘└─┘┴   ┴ |\n" +
+                "'------------------'\n";
+
+            string reset =
+                " __________________\n" +
+                "|  ┬─┐┌─┐┌─┐┌─┐┌┬┐ |\n" +
+                "|  ├┬┘├┤ └─┐├┤  │  |\n" +
+                "|  ┴└─└─┘└─┘└─┘ ┴  |\n" +
+                "'------------------'\n";
+            */
+            Console.Write(buttons);
+        }
+
+        public static void Draw(this EndGame endGame)
+        {
+            Console.Clear();
         }
 
         public static void Draw(this Board board)
         {
-            //GCHandle gch = GCHandle.Alloc(board, GCHandleType.Pinned);
-            //IntPtr pObj = gch.AddrOfPinnedObject();
-            //Debug.WriteLine("Draw: " + pObj.ToString());
-            //Debug.WriteLine(board.ToString());
-            //List<string> output = new List<string>();
             for (int i = 0; i < board.squares.Length; i++)
             {
                 //List of final (fully constructed) lines
                 List<Line> output = new List<Line>();
 
-                List<Line> actualBoardRow = new List<Line>() { new Line(), new Line(), new Line() };
+                List<Line> actualBoardRow = new List<Line>() { new Line("   ", new List<C>() { new C(ConsoleColor.Black, 3) }),
+                    new Line("   ", new List<C>() { new C(ConsoleColor.Black, 3) }),
+                    new Line("   ", new List<C>() { new C(ConsoleColor.Black, 3) }) 
+                };
                 for (int j = 0; j < board.squares[i].Length; j++)
                 {
-                    if (board.GetSelectedSquareAsStart() == board.squares[i][j])
-                        actualBoardRow.Polacz(board.squares[i][j].CreateString(true, false));
-                    else if (board.squares[i][j] is BrownSquare && board.selectedSquaresToEnd.Contains(board.squares[i][j] as BrownSquare))
+                    if (board.GetSelectedSquareAsStart() == board.squares[j][i])
+                        actualBoardRow.Polacz(board.squares[j][i].CreateString(true, false));
+                    else if (board.squares[j][i] is BrownSquare && board.selectedSquaresToEnd.Contains(board.squares[j][i] as BrownSquare))
                     {
-                        actualBoardRow.Polacz(board.squares[i][j].CreateString(false, true));
+                        actualBoardRow.Polacz(board.squares[j][i].CreateString(false, true));
                     }
                     else
-                        actualBoardRow.Polacz(board.squares[i][j].CreateString(false, false));
+                        actualBoardRow.Polacz(board.squares[j][i].CreateString(false, false));
                 }
                 output.AddRange(actualBoardRow);
                 //if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))

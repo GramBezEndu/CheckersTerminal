@@ -8,10 +8,19 @@ namespace CheckersLogic
     {
         public ManPawn(bool isWhite) : base(isWhite) { }
 
-        public override bool IsTakedownMove(BrownSquare end, Square[][] squares, Boolean shouldTakeDown)
+        public override bool IsTakedownMove(BrownSquare end, Square[][] squares, Boolean shouldTakeDown, BrownSquare beg = null)
         {
-            int x = Position.xIndex;
-            int y = Position.yIndex;
+            int x, y;
+            if (beg == null)
+            {
+                x = Position.xIndex;
+                y = Position.yIndex;
+            }
+            else
+            {
+                x = beg.xIndex;
+                y = beg.yIndex;
+            }
             int xDistance;
             int yDistance;
             if (end.Pawn == null)

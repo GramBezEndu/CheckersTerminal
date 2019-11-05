@@ -32,16 +32,25 @@ namespace CheckersLogic
                             return false;
                         }
                     }
+                    return true;
                 }
-                return true;
             }
             return false;
         }
 
-        public override bool IsTakedownMove(BrownSquare end, Square[][] squares, Boolean shouldTakeDown)
+        public override bool IsTakedownMove(BrownSquare end, Square[][] squares, Boolean shouldTakeDown, BrownSquare beg = null)
         {
-            int x = Position.xIndex;
-            int y = Position.yIndex;
+            int x, y;
+            if (beg == null)
+            {
+                x = Position.xIndex;
+                y = Position.yIndex;
+            }
+            else
+            {
+                x = beg.xIndex;
+                y = beg.yIndex;
+            }
             int xDistance;
             int yDistance;
             int absDistance;

@@ -29,7 +29,7 @@ namespace CheckersLogic
             }
         }
 
-        private bool gameFinished = false;
+        public bool GameFinished = false;
 
         public BrownSquare GetSelectedSquareAsStart()
         {
@@ -49,12 +49,13 @@ namespace CheckersLogic
         private const string blackTurnText = "BLACK TURN";
         private const string whiteTurnText = "WHITE TURN";
 
-        public EventHandler WrongMove;
+        public EventHandler OnWrongMove;
+        //public EventHandler OnTakedown;
         private const string notValidMoveText = "NOT VALID MOVE";
         /// <summary>
         /// Indicates who won game (black or white)
         /// </summary>
-        private string whoWonText;
+        public bool WhiteWon { get; private set; }
 
         public bool blackPawnsAtBeginningOnBottom = true;
         public Board()
@@ -176,7 +177,7 @@ namespace CheckersLogic
             }
             //Call any events (eg. play sound) on wrong move
             if(correctMove == false)
-                WrongMove?.Invoke(this, new EventArgs());
+                OnWrongMove?.Invoke(this, new EventArgs());
             //Reset selected squares no matter the result
             SetSelectedSquareAsStart(null);
             selectedSquaresToEnd = new List<BrownSquare>();
@@ -556,11 +557,11 @@ namespace CheckersLogic
 
         private void EndGame(bool whiteWon)
         {
-            gameFinished = true;
-            if(whiteWon)
-                whoWonText = "WHITE WINS!";
+            GameFinished = true;
+            if (whiteWon)
+                WhiteWon = true;
             else
-                whoWonText = "BLACK WINS!";
+                WhiteWon = false;
         }
 
         private void CreateSquares()
